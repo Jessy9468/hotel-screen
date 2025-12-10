@@ -7,6 +7,11 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        :root {
+            /* facteur de mise à l’échelle global */
+            --scale: 1;
+        }
+
         html, body {
             width: 100%;
             height: 100%;
@@ -15,16 +20,35 @@
             color: #fff;
         }
 
-        /* on force vraiment à coller à l'écran */
         body {
             width: 100vw;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* Logo en haut à droite */
+        /* Conteneur qui centre l'écran "virtuel" */
+        .screen-root {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* Zone de design fixe en 1920x1080, ensuite on la scale */
+        .layout-wrapper {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            transform-origin: center center;
+            transform: scale(var(--scale));
+        }
+
+        /* Logo en haut à droite, relatif à la zone 1920x1080 */
         .logo-container {
-            position: fixed;
+            position: absolute;
             top: 12px;
             right: 24px;
             z-index: 20;
@@ -36,13 +60,13 @@
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
 
+        /* Grille interne qui remplit la zone 1920x1080 */
         .layout {
+            position: absolute;
+            inset: 16px; /* marges internes */
             display: grid;
             grid-template-columns: 1.25fr 1fr;
             gap: 16px;
-            padding: 16px;
-            width: 100vw;
-            height: 100vh;
         }
 
         .panel {
@@ -56,7 +80,7 @@
             min-height: 0;
         }
 
-        /* Colonne widgets : scrollable pour que le sticky fonctionne */
+        /* Colonne widgets : scrollable dans la zone virtuelle si besoin */
         .panel-widgets {
             overflow-y: auto;
             overflow-x: hidden;
@@ -261,7 +285,7 @@
         /* Photos / carrousel simple */
         .photo-wrapper {
             position: relative;
-            height: 260px; /* un poil plus grand */
+            height: 260px;
             border-radius: 12px;
             overflow: hidden;
             background: #000;
@@ -281,141 +305,157 @@
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
-        /* Adaptation mobile uniquement en dessous de 800px (donc pas sur ta TV) */
-        @media (max-width: 800px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-
-            .layout {
-                grid-template-columns: 1fr;
+        /* Optionnel : si un tout petit écran (téléphone), on laisse scroller
+           pour ne pas que tout soit minuscule */
+        @media (max-width: 900px) {
+            .layout-wrapper {
                 width: 100%;
                 height: auto;
-                overflow-y: auto;
+                transform: none;
             }
-
-            .panel-widgets {
-                max-height: none;
-                overflow-y: visible;
+            .layout {
+                position: static;
+                display: block;
+            }
+            .panel {
+                margin-bottom: 16px;
             }
         }
     </style>
 </head>
 <body>
 
-<!-- LOGO EN HAUT À DROITE -->
-<div class="logo-container">
-    <img id="logo-img" src="" alt="Logo hôtel" />
-</div>
-
-<div class="layout">
-
-    <!-- COLONNE GAUCHE : TARIFS -->
-    <div class="panel" id="panel-tarifs">
-        <div class="panel-title">Prix des chambres</div>
-        <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
-
-        <div class="rate-header">
-            <div>Room rates</div>
-            <div class="rate-date" id="rate-date"></div>
+<div class="screen-root">
+    <div class="layout-wrapper">
+        <!-- LOGO EN HAUT À DROITE -->
+        <div class="logo-container">
+            <img id="logo-img" src="" alt="Logo hôtel" />
         </div>
 
-        <table class="rates-table">
-            <thead>
-            <tr>
-                <th>Type de prestation</th>
-                <th style="text-align:right;">Prix / Rates</th>
-            </tr>
-            </thead>
-            <tbody id="rates-body">
-            <!-- rempli par Google Sheets -->
-            </tbody>
-        </table>
+        <div class="layout">
 
-        <div class="details-grid" id="details-grid">
-            <!-- rempli par Google Sheets -->
-        </div>
+            <!-- COLONNE GAUCHE : TARIFS -->
+            <div class="panel" id="panel-tarifs">
+                <div class="panel-title">Prix des chambres</div>
+                <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
 
-        <!-- Bas du panneau gauche collé en bas -->
-        <div class="panel-bottom">
-            <div class="hotel-name" id="hotel-name">
-                Bienvenue à l'hôtel ibis Vitré Centre
+                <div class="rate-header">
+                    <div>Room rates</div>
+                    <div class="rate-date" id="rate-date"></div>
+                </div>
+
+                <table class="rates-table">
+                    <thead>
+                    <tr>
+                        <th>Type de prestation</th>
+                        <th style="text-align:right;">Prix / Rates</th>
+                    </tr>
+                    </thead>
+                    <tbody id="rates-body">
+                    <!-- rempli par Google Sheets -->
+                    </tbody>
+                </table>
+
+                <div class="details-grid" id="details-grid">
+                    <!-- rempli par Google Sheets -->
+                </div>
+
+                <!-- Bas du panneau gauche collé en bas -->
+                <div class="panel-bottom">
+                    <div class="hotel-name" id="hotel-name">
+                        Bienvenue à l'hôtel ibis Vitré Centre
+                    </div>
+                    <div class="footer-text" id="footer-text">
+                        <!-- rempli par l’onglet "mentions" -->
+                    </div>
+                </div>
             </div>
-            <div class="footer-text" id="footer-text">
-                <!-- rempli par l’onglet "mentions" -->
+
+            <!-- COLONNE DROITE : MÉTÉO / MENU / INFOS / PHOTOS -->
+            <div class="panel panel-widgets">
+                <div class="widgets">
+
+                    <!-- INFOS IMPORTANTES (STICKY EN HAUT SI TEXTE) -->
+                    <section class="widget widget-sticky" id="widget-infos">
+                        <div class="widget-header">
+                            <div class="widget-title">Informations importantes</div>
+                        </div>
+                        <div id="infos-list">
+                            <!-- lignes depuis Google Sheets -->
+                        </div>
+                    </section>
+
+                    <!-- MÉTÉO -->
+                    <section class="widget" id="widget-meteo">
+                        <div class="widget-header">
+                            <div>
+                                <div class="widget-title">Météo</div>
+                                <div class="widget-sub" id="weather-location">Vitré</div>
+                            </div>
+                            <div class="widget-sub" id="weather-updated">—</div>
+                        </div>
+                        <div class="weather-main">
+                            <div>
+                                <div class="weather-temp" id="weather-temp">--°C</div>
+                                <div class="weather-desc" id="weather-desc">Chargement…</div>
+                            </div>
+                            <div>
+                                <div class="weather-extra">
+                                    <div id="weather-highlow"></div>
+                                    <div id="weather-humidity"></div>
+                                    <div id="weather-wind"></div>
+                                </div>
+                                <div class="weather-2days" id="weather-2days">
+                                    <!-- Aujourd'hui + demain -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- MENU DU JOUR -->
+                    <section class="widget" id="widget-menu">
+                        <div class="widget-header">
+                            <div class="widget-title">Menu du jour</div>
+                            <div class="widget-sub" id="menu-date"></div>
+                        </div>
+                        <div class="menu-title" id="menu-title">Chargement…</div>
+                        <div class="menu-items" id="menu-items"></div>
+                    </section>
+
+                    <!-- PHOTOS -->
+                    <section class="widget" id="widget-photos">
+                        <div class="widget-header">
+                            <div class="widget-title">Découvrir l'hôtel</div>
+                        </div>
+                        <div class="photo-wrapper">
+                            <img id="photo-img" src="" alt="Photo hôtel" />
+                            <div class="photo-caption" id="photo-caption"></div>
+                        </div>
+                    </section>
+
+                </div>
             </div>
+
         </div>
     </div>
-
-    <!-- COLONNE DROITE : MÉTÉO / MENU / INFOS / PHOTOS -->
-    <div class="panel panel-widgets">
-        <div class="widgets">
-
-            <!-- INFOS IMPORTANTES (STICKY EN HAUT SI TEXTE) -->
-            <section class="widget widget-sticky" id="widget-infos">
-                <div class="widget-header">
-                    <div class="widget-title">Informations importantes</div>
-                </div>
-                <div id="infos-list">
-                    <!-- lignes depuis Google Sheets -->
-                </div>
-            </section>
-
-            <!-- MÉTÉO -->
-            <section class="widget" id="widget-meteo">
-                <div class="widget-header">
-                    <div>
-                        <div class="widget-title">Météo</div>
-                        <div class="widget-sub" id="weather-location">Vitré</div>
-                    </div>
-                    <div class="widget-sub" id="weather-updated">—</div>
-                </div>
-                <div class="weather-main">
-                    <div>
-                        <div class="weather-temp" id="weather-temp">--°C</div>
-                        <div class="weather-desc" id="weather-desc">Chargement…</div>
-                    </div>
-                    <div>
-                        <div class="weather-extra">
-                            <div id="weather-highlow"></div>
-                            <div id="weather-humidity"></div>
-                            <div id="weather-wind"></div>
-                        </div>
-                        <div class="weather-2days" id="weather-2days">
-                            <!-- Aujourd'hui + demain -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- MENU DU JOUR -->
-            <section class="widget" id="widget-menu">
-                <div class="widget-header">
-                    <div class="widget-title">Menu du jour</div>
-                    <div class="widget-sub" id="menu-date"></div>
-                </div>
-                <div class="menu-title" id="menu-title">Chargement…</div>
-                <div class="menu-items" id="menu-items"></div>
-            </section>
-
-            <!-- PHOTOS -->
-            <section class="widget" id="widget-photos">
-                <div class="widget-header">
-                    <div class="widget-title">Découvrir l'hôtel</div>
-                </div>
-                <div class="photo-wrapper">
-                    <img id="photo-img" src="" alt="Photo hôtel" />
-                    <div class="photo-caption" id="photo-caption"></div>
-                </div>
-            </section>
-
-        </div>
-    </div>
-
 </div>
 
 <script>
+    /********* A. ZOOM / MISE À L'ÉCHELLE *********/
+
+    const DESIGN_WIDTH = 1920;
+    const DESIGN_HEIGHT = 1080;
+
+    function updateScale() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        // on prend le facteur qui permet de tout faire rentrer
+        const scale = Math.min(w / DESIGN_WIDTH, h / DESIGN_HEIGHT);
+        document.documentElement.style.setProperty('--scale', scale);
+    }
+
+    window.addEventListener('resize', updateScale);
+
     /********* 1. CONFIG *******/
 
     const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
@@ -819,6 +859,7 @@
     /********* 10. INIT ********/
 
     async function init() {
+        updateScale();             // calcule le zoom dès le début
         await loadSettings();
         loadTarifs();
         loadWeather();
