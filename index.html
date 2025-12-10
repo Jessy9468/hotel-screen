@@ -16,20 +16,21 @@
             overflow: hidden;
         }
 
-        /* Logo en haut à droite */
+        /* LOGO EN HAUT À DROITE (background-image) */
         .logo-container {
             position: fixed;
             top: 12px;
             right: 24px;
             z-index: 20;
-        }
-        .logo-container img {
-            max-height: 70px;
-            width: auto;
-            object-fit: contain;
+            width: 120px;
+            height: 70px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
 
+        /* STRUCTURE */
         .layout {
             display: grid;
             grid-template-columns: 1.25fr 1fr;
@@ -45,788 +46,352 @@
             display: flex;
             flex-direction: column;
         }
-        /* Colonne widgets : scrollable pour que le sticky fonctionne */
-        .panel-widgets {
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
+        .panel-widgets { overflow-y: auto; overflow-x: hidden; }
 
         .panel-title {
-            font-size: 28px;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
+            font-size: 28px; font-weight: 700;
+            text-align: center; margin-bottom: 10px;
         }
         .panel-subtitle {
-            font-size: 14px;
-            text-align: center;
-            opacity: 0.8;
-            margin-bottom: 12px;
+            font-size: 14px; text-align: center;
+            opacity: 0.8; margin-bottom: 12px;
         }
 
-        /* Colonne gauche : tarifs */
-        .rate-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        .rate-date {
-            font-weight: 600;
-        }
-        .rates-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-            font-size: 18px;
-        }
-        .rates-table thead tr {
-            background: #CC0033;
-        }
-        .rates-table thead th {
-            padding: 10px 12px;
-            text-align: left;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-        }
-        .rates-table tbody tr:nth-child(odd) {
-            background: #E5093B;
-        }
-        .rates-table tbody tr:nth-child(even) {
-            background: #F2405F;
-        }
-        .rates-table td {
-            padding: 12px;
-            vertical-align: middle;
-        }
-        .rates-label {
-            font-weight: 600;
-        }
-        .rates-sub {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-        .rates-price {
-            text-align: right;
-            font-weight: 700;
-        }
+        /* TABLEAU TARIFS */
+        .rate-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .rate-date { font-weight: 600; }
+
+        .rates-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .rates-table thead tr { background: #CC0033; }
+        .rates-table th { padding: 10px 12px; font-size: 14px; }
+        .rates-table tbody tr:nth-child(odd) { background: #E5093B; }
+        .rates-table tbody tr:nth-child(even) { background: #F2405F; }
+        .rates-table td { padding: 12px; }
+
+        .rates-label { font-weight: 600; }
+        .rates-sub { font-size: 12px; opacity: 0.9; }
+        .rates-price { text-align: right; font-weight: 700; }
 
         .details-grid {
             display: grid;
             grid-template-columns: 1fr auto;
-            column-gap: 24px;
-            row-gap: 4px;
-            font-size: 14px;
-            margin-top: 32px;
+            gap: 4px 24px;
+            margin-top: 28px;
             padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
-        .detail-item-title {
-            font-weight: 600;
-            text-align: left;
-        }
-        .detail-price {
-            text-align: right;
-            font-weight: 600;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
 
-        .hotel-name {
-            font-size: 16px;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 16px;
-        }
+        .detail-item-title { font-weight: 600; }
+        .detail-price { font-weight: 600; text-align: right; }
 
-        .footer-text {
-            font-size: 11px;
-            margin-top: 8px;
-            line-height: 1.3;
-            opacity: 0.85;
-        }
+        /* BAS DE PAGE GAUCHE */
+        .panel-bottom { margin-top: auto; }
+        .hotel-name { font-size: 16px; font-weight: 700; text-align: center; margin-top: 20px; }
+        .footer-text { font-size: 11px; opacity: 0.85; margin-top: 8px; line-height: 1.3; }
 
-        /* Zone bas de panel gauche (Bienvenue + mentions) collée au bas */
-        .panel-bottom {
-            margin-top: auto;
-        }
-
-        /* Colonne droite : widgets */
-        .widgets {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            flex: 1;
-        }
+        /* WIDGETS */
+        .widgets { display: flex; flex-direction: column; gap: 14px; }
         .widget {
             background: #151515;
             border-radius: 14px;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            padding: 14px;
         }
-        /* Infos importantes reste en haut si présent */
-        .widget-sticky {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+        .widget-sticky { position: sticky; top: 0; z-index: 10; }
 
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .widget-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        .widget-sub {
-            font-size: 12px;
-            opacity: 0.7;
-        }
+        .widget-title { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+        .widget-sub { font-size: 12px; opacity: 0.7; }
 
-        /* Météo */
-        .weather-main {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .weather-temp {
-            font-size: 40px;
-            font-weight: 700;
-        }
-        .weather-desc {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        .weather-extra {
-            display: flex;
-            gap: 16px;
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 4px;
-            flex-wrap: wrap;
-        }
-        .weather-2days {
-            display: flex;
-            gap: 12px;
-            margin-top: 6px;
-            font-size: 12px;
-            opacity: 0.85;
-        }
-        .weather-2days-item {
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 4px 6px;
-            min-width: 90px;
-        }
-        .weather-2days-label {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        /* Menu du jour */
-        .menu-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .menu-items {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        /* Infos importantes */
-        .info-item {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 4px;
-        }
-
-        /* Photos / carrousel simple */
-        .photo-wrapper {
-            position: relative;
-            height: 240px; /* plus grand en hauteur */
+        /* METEO */
+        .weather-block {
+            padding: 10px;
+            background: rgba(255,255,255,0.06);
             border-radius: 12px;
-            overflow: hidden;
-            background: #000;
+            margin-top: 10px;
         }
-        .photo-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .weather-day-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .weather-temp-big { font-size: 40px; font-weight: 700; }
+        .weather-desc { opacity: 0.85; margin-bottom: 4px; }
+        .weather-small-info { font-size: 12px; opacity: 0.7; }
+
+        /* CARROUSEL PHOTOS (background-image) */
+        .photo-wrapper {
+            height: 280px;
+            border-radius: 14px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            overflow: hidden;
         }
         .photo-caption {
             position: absolute;
-            left: 0;
-            right: 0;
             bottom: 0;
-            padding: 6px 10px;
-            font-size: 13px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            width: 100%;
+            padding: 8px;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            font-size: 14px;
         }
 
-        /* Adaptation si écran plus étroit (au cas où) */
-        @media (max-width: 1100px) {
-            .layout {
-                grid-template-columns: 1fr;
-                overflow-y: auto;
-                height: auto;
-            }
-            body { overflow-y: auto; }
-        }
     </style>
 </head>
 <body>
 
-<!-- LOGO EN HAUT À DROITE -->
-<div class="logo-container">
-    <img id="logo-img" src="" alt="Logo hôtel" />
-</div>
+<!-- LOGO -->
+<div class="logo-container" id="logo-container"></div>
 
 <div class="layout">
 
-    <!-- COLONNE GAUCHE : TARIFS -->
-    <div class="panel" id="panel-tarifs">
+    <!-- COLONNE GAUCHE -->
+    <div class="panel">
         <div class="panel-title">Prix des chambres</div>
         <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
 
         <div class="rate-header">
             <div>Room rates</div>
-            <div class="rate-date" id="rate-date"></div>
+            <div id="rate-date"></div>
         </div>
 
         <table class="rates-table">
             <thead>
-            <tr>
-                <th>Type de prestation</th>
-                <th style="text-align:right;">Prix / Rates</th>
-            </tr>
+                <tr>
+                    <th>Type de prestation</th>
+                    <th style="text-align:right;">Prix / Rates</th>
+                </tr>
             </thead>
-            <tbody id="rates-body">
-            <!-- rempli par Google Sheets -->
-            </tbody>
+            <tbody id="rates-body"></tbody>
         </table>
 
-        <div class="details-grid" id="details-grid">
-            <!-- rempli par Google Sheets -->
-        </div>
+        <div class="details-grid" id="details-grid"></div>
 
-        <!-- Bas du panneau gauche collé en bas -->
         <div class="panel-bottom">
-            <div class="hotel-name" id="hotel-name">
-                Bienvenue à l'hôtel ibis Vitré Centre
-            </div>
-            <div class="footer-text" id="footer-text">
-                <!-- rempli par l’onglet "mentions" -->
-            </div>
+            <div class="hotel-name">Bienvenue à l'hôtel ibis Vitré Centre</div>
+            <div class="footer-text" id="footer-text"></div>
         </div>
     </div>
 
-    <!-- COLONNE DROITE : MÉTÉO / MENU / INFOS / PHOTOS -->
+    <!-- COLONNE DROITE -->
     <div class="panel panel-widgets">
         <div class="widgets">
 
-            <!-- INFOS IMPORTANTES (STICKY EN HAUT SI TEXTE) -->
-            <section class="widget widget-sticky" id="widget-infos">
-                <div class="widget-header">
-                    <div class="widget-title">Informations importantes</div>
-                </div>
-                <div id="infos-list">
-                    <!-- lignes depuis Google Sheets -->
-                </div>
-            </section>
+            <!-- INFOS IMPORTANTES -->
+            <div class="widget widget-sticky" id="widget-infos">
+                <div class="widget-title">Informations importantes</div>
+                <div id="infos-list"></div>
+            </div>
 
-            <!-- MÉTÉO -->
-            <section class="widget" id="widget-meteo">
-                <div class="widget-header">
-                    <div>
-                        <div class="widget-title">Météo</div>
-                        <div class="widget-sub" id="weather-location">Vitré</div>
-                    </div>
-                    <div class="widget-sub" id="weather-updated">—</div>
-                </div>
-                <div class="weather-main">
-                    <div>
-                        <div class="weather-temp" id="weather-temp">--°C</div>
-                        <div class="weather-desc" id="weather-desc">Chargement…</div>
-                    </div>
-                    <div>
-                        <div class="weather-extra">
-                            <div id="weather-highlow"></div>
-                            <div id="weather-humidity"></div>
-                            <div id="weather-wind"></div>
-                        </div>
-                        <div class="weather-2days" id="weather-2days">
-                            <!-- Aujourd'hui + demain -->
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <!-- METEO AUJOURD'HUI -->
+            <div class="widget">
+                <div class="widget-title">Météo aujourd'hui</div>
+                <div id="weather-today" class="weather-block"></div>
+            </div>
+
+            <!-- METEO DEMAIN -->
+            <div class="widget">
+                <div class="widget-title">Météo demain</div>
+                <div id="weather-tomorrow" class="weather-block"></div>
+            </div>
 
             <!-- MENU DU JOUR -->
-            <section class="widget" id="widget-menu">
-                <div class="widget-header">
-                    <div class="widget-title">Menu du jour</div>
-                    <div class="widget-sub" id="menu-date"></div>
-                </div>
-                <div class="menu-title" id="menu-title">Chargement…</div>
-                <div class="menu-items" id="menu-items"></div>
-            </section>
+            <div class="widget" id="widget-menu">
+                <div class="widget-title">Menu du jour</div>
+                <div class="widget-sub" id="menu-date"></div>
+                <div id="menu-title"></div>
+                <div id="menu-items"></div>
+            </div>
 
             <!-- PHOTOS -->
-            <section class="widget" id="widget-photos">
-                <div class="widget-header">
-                    <div class="widget-title">Découvrir l'hôtel</div>
-                </div>
-                <div class="photo-wrapper">
-                    <img id="photo-img" src="" alt="Photo hôtel" />
+            <div class="widget" id="widget-photos">
+                <div class="widget-title">Découvrir l'hôtel</div>
+                <div class="photo-wrapper" id="photo-wrapper">
                     <div class="photo-caption" id="photo-caption"></div>
                 </div>
-            </section>
+            </div>
 
         </div>
     </div>
-
 </div>
 
 <script>
-    /********* 1. CONFIG *******/
+/* ---------------- CONFIG ---------------- */
+const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
 
-    // ID PUBLIC (après "d/e/" dans ton lien publié)
-    const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
+const GID_TARIFS   = "618820453";
+const GID_DETAILS  = "126337975";
+const GID_MENU     = "695467279";
+const GID_INFOS    = "1342307900";
+const GID_PHOTOS   = "407579197";
+const GID_MENTIONS = "1712757088";
 
-    // GID de chaque onglet (d’après tes liens)
-    const GID_TARIFS     = "618820453";    // onglet tarifs
-    const GID_DETAILS    = "126337975";    // onglet details
-    const GID_MENU       = "695467279";    // onglet menu
-    const GID_INFOS      = "1342307900";   // onglet infos
-    const GID_PHOTOS     = "407579197";    // onglet photos
-    const GID_MENTIONS   = "1712757088";   // onglet mentions
-    // 👉 À créer : onglet "parametres" avec colonnes cle / valeur
-    // Récupère ensuite son gid et remplace ci-dessous :
-    const GID_PARAMETRES = "000000000"; // REMPLACE par le gid réel de l’onglet parametres
+const LAT = 48.123;
+const LON = -1.208;
 
-    // Coordonnées pour la météo (Vitré)
-    const LAT = 48.123;
-    const LON = -1.208;
+/* -------------- UTILITAIRE CSV --------------- */
+function fetchCsv(gid){
+    const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
+    return fetch(url).then(r=>r.text()).then(parseCsv);
+}
+function parseCsv(text){
+    const lines = text.split(/\r?\n/);
+    const headers = lines[0].split(",");
+    return lines.slice(1).map(l => {
+        const cols = l.split(",");
+        const obj = {};
+        headers.forEach((h,i)=>obj[h.trim().toLowerCase()] = (cols[i]||"").trim());
+        return obj;
+    });
+}
 
-    // Valeurs par défaut des paramètres
-    const DEFAULT_SETTINGS = {
-        refreshMainMinutes: 10,      // tarifs / menu / infos / mentions / photos
-        refreshWeatherMinutes: 20,   // météo
-        photoIntervalSeconds: 8,     // durée entre 2 photos
-        weatherLocationLabel: "Vitré"
-    };
-    let SETTINGS = { ...DEFAULT_SETTINGS };
+/* ------------------- TARIFS ------------------- */
+function loadTarifs(){
+    fetchCsv(GID_TARIFS).then(rows=>{
+        const tbody=document.getElementById("rates-body");
+        tbody.innerHTML="";
+        rows.forEach(r=>{
+            const tr=document.createElement("tr");
+            tr.innerHTML = `
+                <td>
+                    <div class="rates-label">${r.type}</div>
+                    <div class="rates-sub">${r.sous_titre}</div>
+                </td>
+                <td class="rates-price">${r.prix}</td>`;
+            tbody.appendChild(tr);
+        });
+    });
 
-    let mainIntervalId = null;
-    let weatherIntervalId = null;
-    let photoRotationId = null;
+    fetchCsv(GID_DETAILS).then(rows=>{
+        const grid=document.getElementById("details-grid");
+        grid.innerHTML="";
+        rows.forEach(r=>{
+            if(!r.libelle) return;
+            grid.innerHTML += `
+                <div class="detail-item-title">${r.libelle}</div>
+                <div class="detail-price">${r.prix||""}</div>`;
+        });
+    });
 
-    /********* 2. FETCH & PARSE CSV *******/
+    document.getElementById("rate-date").textContent =
+        new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+}
 
-    function fetchCsv(gid) {
-        const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
-        return fetch(url)
-            .then(r => {
-                if (!r.ok) {
-                    throw new Error("HTTP " + r.status);
-                }
-                return r.text();
-            })
-            .then(text => parseCsv(text))
-            .catch(err => {
-                console.error("Erreur fetchCsv pour gid", gid, err);
-                return [];
-            });
-    }
+/* ---------------- METEO (AUJOURD'HUI + DEMAIN) ---------------- */
+function loadWeather(){
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
 
-    // Découpe une ligne CSV en tenant compte des guillemets
-    function csvSplit(line) {
-        const result = [];
-        let current = "";
-        let inQuotes = false;
+    fetch(url).then(r=>r.json()).then(data=>{
+        const today = `
+            <div class="weather-day-title">Aujourd'hui</div>
+            <div class="weather-temp-big">${Math.round(data.current.temperature_2m)}°C</div>
+            <div class="weather-desc">${mapWeather(data.current.weather_code)}</div>
+            <div class="weather-small-info">Max ${Math.round(data.daily.temperature_2m_max[0])}° / Min ${Math.round(data.daily.temperature_2m_min[0])}°</div>
+            <div class="weather-small-info">Humidité : ${data.current.relative_humidity_2m}%</div>
+            <div class="weather-small-info">Vent : ${Math.round(data.current.wind_speed_10m)} km/h</div>
+        `;
+        const tomorrow = `
+            <div class="weather-day-title">Demain</div>
+            <div class="weather-desc">${mapWeather(data.daily.weather_code[1])}</div>
+            <div class="weather-small-info">Max ${Math.round(data.daily.temperature_2m_max[1])}° / Min ${Math.round(data.daily.temperature_2m_min[1])}°</div>
+        `;
 
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            if (char === '"') {
-                if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
-                    current += '"';
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (char === ',' && !inQuotes) {
-                result.push(current);
-                current = "";
-            } else {
-                current += char;
-            }
-        }
-        result.push(current);
-        return result;
-    }
+        document.getElementById("weather-today").innerHTML = today;
+        document.getElementById("weather-tomorrow").innerHTML = tomorrow;
+    });
+}
+function mapWeather(code){
+    if(code===0) return "Ciel dégagé";
+    if([1,2,3].includes(code)) return "Partiellement nuageux";
+    if([45,48].includes(code)) return "Brouillard";
+    if([51,53,55].includes(code)) return "Bruine";
+    if([61,63,65].includes(code)) return "Pluie";
+    if([71,73,75].includes(code)) return "Neige";
+    if([80,81,82].includes(code)) return "Averses";
+    if([95,96,99].includes(code)) return "Orage";
+    return "Conditions variables";
+}
 
-    function parseCsv(text) {
-        const lines = text.trim().split(/\r?\n/);
-        if (lines.length === 0) return [];
-        const headerCols = csvSplit(lines[0]).map(h => h.trim());
-        const rows = [];
+/* ---------------- MENU ---------------- */
+function loadMenu(){
+    fetchCsv(GID_MENU).then(rows=>{
+        if(!rows.length) return document.getElementById("widget-menu").style.display="none";
+        const r=rows[0];
+        document.getElementById("menu-date").textContent =
+            new Date().toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+        document.getElementById("menu-title").textContent = r.titre;
+        document.getElementById("menu-items").innerHTML = r.items.replace(/\n/g,"<br>");
+    });
+}
 
-        for (let idx = 1; idx < lines.length; idx++) {
-            const line = lines[idx];
-            if (!line.trim()) continue;
-            const cols = csvSplit(line);
-            const obj = {};
-            headerCols.forEach((h, i) => {
-                let val = cols[i] || "";
-                val = val.replace(/^"(.*)"$/s, "$1").replace(/""/g, '"');
-                obj[h] = val.trim();
-            });
-            rows.push(obj);
-        }
-        return rows;
-    }
+/* ---------------- INFOS IMPORTANTES ---------------- */
+function loadInfos(){
+    fetchCsv(GID_INFOS).then(rows=>{
+        const box=document.getElementById("infos-list");
+        box.innerHTML="";
+        rows.forEach(r=>{
+            if(r.texte) box.innerHTML+=`<div class="info-item">• ${r.texte}</div>`;
+        });
+    });
+}
 
-    /********* 3. PARAMETRES (onglet "parametres") *******/
+/* ---------------- MENTIONS ---------------- */
+function loadMentions(){
+    fetchCsv(GID_MENTIONS).then(rows=>{
+        if(rows.length)
+            document.getElementById("footer-text").textContent = rows[0].mention;
+    });
+}
 
-    async function loadSettings() {
-        if (GID_PARAMETRES === "000000000") {
-            document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+/* ---------------- PHOTOS + LOGO ---------------- */
+let photos=[];
+let currentPhoto=0;
+let logoPhoto=null;
+
+function loadPhotos(){
+    fetchCsv(GID_PHOTOS).then(rows=>{
+        const clean = rows.filter(r=>r.url);
+
+        /* 1) détecter logo */
+        logoPhoto = clean.find(r => (r.legende||"").toLowerCase().includes("logo")) || clean[0];
+
+        /* appliquer logo en background-image */
+        document.getElementById("logo-container").style.backgroundImage = `url("${logoPhoto.url}")`;
+
+        /* 2) autres photos = carrousel */
+        photos = clean.filter(r => r !== logoPhoto);
+
+        if(!photos.length){
+            document.getElementById("widget-photos").style.display="none";
             return;
         }
 
-        const rows = await fetchCsv(GID_PARAMETRES);
-        rows.forEach(r => {
-            const key = (r["cle"] || "").trim().toLowerCase();
-            const value = (r["valeur"] || "").trim();
-            if (!key) return;
-
-            switch (key) {
-                case "refresh_main_minutes":
-                    const rm = parseInt(value, 10);
-                    if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
-                    break;
-                case "refresh_weather_minutes":
-                    const rw = parseInt(value, 10);
-                    if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
-                    break;
-                case "photo_interval_seconds":
-                    const ps = parseInt(value, 10);
-                    if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
-                    break;
-                case "weather_location_label":
-                    if (value) SETTINGS.weatherLocationLabel = value;
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
-    }
-
-    function setupIntervals() {
-        const mainMs = SETTINGS.refreshMainMinutes * 60 * 1000;
-        const weatherMs = SETTINGS.refreshWeatherMinutes * 60 * 1000;
-
-        if (mainIntervalId) clearInterval(mainIntervalId);
-        if (weatherIntervalId) clearInterval(weatherIntervalId);
-
-        mainIntervalId = setInterval(() => {
-            loadTarifs();
-            loadMenu();
-            loadInfos();
-            loadMentions();
-            loadPhotos();
-        }, mainMs);
-
-        weatherIntervalId = setInterval(loadWeather, weatherMs);
-    }
-
-    /********* 4. TARIFS & DÉTAILS *******/
-
-    function loadTarifs() {
-        fetchCsv(GID_TARIFS).then(rows => {
-            const tbody = document.getElementById("rates-body");
-            tbody.innerHTML = "";
-            rows.forEach(r => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>
-                        <div class="rates-label">${r["type"] || ""}</div>
-                        <div class="rates-sub">${r["sous_titre"] || ""}</div>
-                    </td>
-                    <td class="rates-price">${r["prix"] || ""}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        });
-
-        fetchCsv(GID_DETAILS).then(rows => {
-            const container = document.getElementById("details-grid");
-            container.innerHTML = "";
-            rows.forEach(r => {
-                const lib = (r["libelle"] || "").trim();
-                const prix = (r["prix"] || "").trim();
-                if (!lib && !prix) return;
-
-                const labelDiv = document.createElement("div");
-                labelDiv.className = "detail-item-title";
-                labelDiv.textContent = lib;
-
-                const priceDiv = document.createElement("div");
-                priceDiv.className = "detail-price";
-                priceDiv.textContent = prix;
-
-                container.appendChild(labelDiv);
-                container.appendChild(priceDiv);
-            });
-        });
-
-        const dateEl = document.getElementById("rate-date");
-        const now = new Date();
-        const formatter = new Intl.DateTimeFormat("fr-FR", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-        dateEl.textContent = formatter.format(now);
-    }
-
-    /********* 5. MÉTÉO (actuel + demain) *******/
-
-    function loadWeather() {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
-        fetch(url)
-            .then(r => r.json())
-            .then(data => {
-                const current = data.current;
-                const daily = data.daily;
-
-                document.getElementById("weather-temp").textContent =
-                    Math.round(current.temperature_2m) + "°C";
-
-                document.getElementById("weather-highlow").textContent =
-                    "Max " + Math.round(daily.temperature_2m_max[0]) +
-                    "° / Min " + Math.round(daily.temperature_2m_min[0]) + "°";
-
-                document.getElementById("weather-desc").textContent =
-                    mapWeatherCode(current.weather_code);
-
-                document.getElementById("weather-humidity").textContent =
-                    "Humidité " + Math.round(current.relative_humidity_2m) + "%";
-
-                document.getElementById("weather-wind").textContent =
-                    "Vent " + Math.round(current.wind_speed_10m) + " km/h";
-
-                const updated = new Date(current.time);
-                document.getElementById("weather-updated").textContent =
-                    "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
-
-                // 2 jours : aujourd'hui + demain
-                const twoDays = document.getElementById("weather-2days");
-                twoDays.innerHTML = "";
-
-                const labels = ["Aujourd'hui", "Demain"];
-                for (let i = 0; i < 2 && i < daily.time.length; i++) {
-                    const item = document.createElement("div");
-                    item.className = "weather-2days-item";
-                    const code = daily.weather_code[i];
-                    const max = Math.round(daily.temperature_2m_max[i]);
-                    const min = Math.round(daily.temperature_2m_min[i]);
-
-                    item.innerHTML = `
-                        <div class="weather-2days-label">${labels[i]}</div>
-                        <div>${mapWeatherCode(code)}</div>
-                        <div>${max}° / ${min}°</div>
-                    `;
-                    twoDays.appendChild(item);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("weather-desc").textContent = "Météo indisponible";
-            });
-    }
-
-    function mapWeatherCode(code) {
-        if (code === 0) return "Ciel dégagé";
-        if ([1,2,3].includes(code)) return "Partiellement nuageux";
-        if ([45,48].includes(code)) return "Brouillard";
-        if ([51,53,55,56,57].includes(code)) return "Bruine";
-        if ([61,63,65].includes(code)) return "Pluie";
-        if ([71,73,75,77].includes(code)) return "Neige";
-        if ([80,81,82].includes(code)) return "Averses";
-        if ([95,96,99].includes(code)) return "Orages";
-        return "Conditions variables";
-    }
-
-    /********* 6. MENU DU JOUR *******/
-
-    function loadMenu() {
-        const widgetMenu = document.getElementById("widget-menu");
-
-        fetchCsv(GID_MENU).then(rows => {
-            if (!rows.length) {
-                widgetMenu.style.display = "none";
-                return;
-            }
-
-            const menu = rows[0];
-            const titre = (menu["titre"] || "").trim();
-            const items = (menu["items"] || "").trim();
-
-            if (!titre && !items) {
-                widgetMenu.style.display = "none";
-                return;
-            }
-
-            widgetMenu.style.display = "";
-            document.getElementById("menu-title").textContent = titre || "Menu du jour";
-
-            const itemsHtml = items
-                .replace(/\\n/g, "<br>")
-                .replace(/\n/g, "<br>");
-            document.getElementById("menu-items").innerHTML = itemsHtml;
-        });
-
-        const now = new Date();
-        document.getElementById("menu-date").textContent =
-            now.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"});
-    }
-
-    /********* 7. INFOS IMPORTANTES *******/
-
-    function loadInfos() {
-        const container = document.getElementById("infos-list");
-        const widgetInfos = document.getElementById("widget-infos");
-
-        fetchCsv(GID_INFOS).then(rows => {
-            container.innerHTML = "";
-            let count = 0;
-
-            rows.forEach(r => {
-                const texte = (r["texte"] || "").trim();
-                if (!texte) return;
-                const div = document.createElement("div");
-                div.className = "info-item";
-                div.textContent = "• " + texte;
-                container.appendChild(div);
-                count++;
-            });
-
-            widgetInfos.style.display = (count === 0) ? "none" : "";
-        });
-    }
-
-    /********* 8. MENTIONS OBLIGATOIRES *******/
-
-    function loadMentions() {
-        fetchCsv(GID_MENTIONS).then(rows => {
-            if (!rows.length) return;
-            const mention = rows[0]["mention"] || "";
-            document.getElementById("footer-text").textContent = mention;
-        });
-    }
-
-    /********* 9. PHOTOS (CARROUSEL) + LOGO *******/
-
-    let photos = [];
-    let currentPhoto = 0;
-    let logoPhoto = null;
-
-    function loadPhotos() {
-        const widgetPhotos = document.getElementById("widget-photos");
-
-        fetchCsv(GID_PHOTOS).then(rows => {
-            console.log("Lignes onglet photos :", rows);
-            photos = [];
-            logoPhoto = null;
-
-            // garder toutes les lignes avec une URL non vide
-            const dataRows = rows.filter(r => (r["url"] || "").trim() !== "");
-
-            if (!dataRows.length) {
-                const logoImg = document.getElementById("logo-img");
-                logoImg.style.display = "none";
-                widgetPhotos.style.display = "none";
-                return;
-            }
-
-            // chercher une ligne avec "logo" dans la légende
-            let candidateLogo = dataRows.find(r => {
-                const legend = (r["legende"] || "").toLowerCase();
-                return legend.includes("logo");
-            });
-
-            // sinon, prendre la première ligne comme logo
-            if (!candidateLogo) {
-                candidateLogo = dataRows[0];
-            }
-
-            logoPhoto = candidateLogo;
-
-            // appliquer le logo en haut à droite
-            const logoImg = document.getElementById("logo-img");
-            logoImg.src = (logoPhoto["url"] || "").trim();
-            logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
-            logoImg.style.display = "block";
-            console.log("Logo utilisé :", logoPhoto);
-
-            // le reste pour le carrousel
-            photos = dataRows.filter(r => r !== logoPhoto);
-
-            if (!photos.length) {
-                widgetPhotos.style.display = "none";
-                if (photoRotationId) {
-                    clearInterval(photoRotationId);
-                    photoRotationId = null;
-                }
-                return;
-            } else {
-                widgetPhotos.style.display = "";
-            }
-
-            currentPhoto = 0;
+        showPhoto();
+        setInterval(()=>{
+            currentPhoto = (currentPhoto+1)%photos.length;
             showPhoto();
+        }, 6000);
+    });
+}
 
-            if (photoRotationId) clearInterval(photoRotationId);
-            const intervalMs = SETTINGS.photoIntervalSeconds * 1000;
-            photoRotationId = setInterval(() => {
-                currentPhoto = (currentPhoto + 1) % photos.length;
-                showPhoto();
-            }, intervalMs);
-        });
-    }
+function showPhoto(){
+    const p = photos[currentPhoto];
+    const wrapper=document.getElementById("photo-wrapper");
+    wrapper.style.backgroundImage = `url("${p.url}")`;
+    document.getElementById("photo-caption").textContent = p.legende||"";
+}
 
-    function showPhoto() {
-        if (!photos.length) return;
-        const p = photos[currentPhoto];
-        console.log("Affichage photo :", p);
-        document.getElementById("photo-img").src = (p["url"] || "").trim();
-        document.getElementById("photo-caption").textContent = p["legende"] || "";
-    }
-
-    /********* 10. INIT + RAFRAÎCHISSEMENT ********/
-
-    async function init() {
-        await loadSettings();
-        loadTarifs();
-        loadWeather();
-        loadMenu();
-        loadInfos();
-        loadPhotos();
-        loadMentions();
-        setupIntervals();
-    }
-
-    init();
+/* ---------------- INIT ---------------- */
+function init(){
+    loadTarifs();
+    loadWeather();
+    loadMenu();
+    loadInfos();
+    loadMentions();
+    loadPhotos();
+}
+init();
 </script>
+
 </body>
 </html>
