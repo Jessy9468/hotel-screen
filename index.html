@@ -211,6 +211,23 @@
             margin-top: 4px;
             flex-wrap: wrap;
         }
+        .weather-2days {
+            display: flex;
+            gap: 12px;
+            margin-top: 6px;
+            font-size: 12px;
+            opacity: 0.85;
+        }
+        .weather-2days-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 4px 6px;
+            min-width: 90px;
+        }
+        .weather-2days-label {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
 
         /* Menu du jour */
         .menu-title {
@@ -232,7 +249,7 @@
         /* Photos / carrousel simple */
         .photo-wrapper {
             position: relative;
-            height: 180px;
+            height: 240px; /* plus grand en hauteur */
             border-radius: 12px;
             overflow: hidden;
             background: #000;
@@ -337,10 +354,15 @@
                         <div class="weather-temp" id="weather-temp">--°C</div>
                         <div class="weather-desc" id="weather-desc">Chargement…</div>
                     </div>
-                    <div class="weather-extra">
-                        <div id="weather-highlow"></div>
-                        <div id="weather-humidity"></div>
-                        <div id="weather-wind"></div>
+                    <div>
+                        <div class="weather-extra">
+                            <div id="weather-highlow"></div>
+                            <div id="weather-humidity"></div>
+                            <div id="weather-wind"></div>
+                        </div>
+                        <div class="weather-2days" id="weather-2days">
+                            <!-- Aujourd'hui + demain -->
+                        </div>
                     </div>
                 </div>
             </section>
@@ -473,7 +495,6 @@
     /********* 3. PARAMETRES (onglet "parametres") *******/
 
     async function loadSettings() {
-        // Si pas encore configuré, on garde les valeurs par défaut
         if (GID_PARAMETRES === "000000000") {
             document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
             return;
@@ -506,7 +527,6 @@
             }
         });
 
-        // Appliquer le libellé météo
         document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
     }
 
@@ -579,10 +599,10 @@
         dateEl.textContent = formatter.format(now);
     }
 
-    /********* 5. MÉTÉO *******/
+    /********* 5. MÉTÉO (actuel + demain) *******/
 
     function loadWeather() {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
         fetch(url)
             .then(r => r.json())
             .then(data => {
@@ -608,6 +628,26 @@
                 const updated = new Date(current.time);
                 document.getElementById("weather-updated").textContent =
                     "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
+
+                // 2 jours : aujourd'hui + demain
+                const twoDays = document.getElementById("weather-2days");
+                twoDays.innerHTML = "";
+
+                const labels = ["Aujourd'hui", "Demain"];
+                for (let i = 0; i < 2 && i < daily.time.length; i++) {
+                    const item = document.createElement("div");
+                    item.className = "weather-2days-item";
+                    const code = daily.weather_code[i];
+                    const max = Math.round(daily.temperature_2m_max[i]);
+                    const min = Math.round(daily.temperature_2m_min[i]);
+
+                    item.innerHTML = `
+                        <div class="weather-2days-label">${labels[i]}</div>
+                        <div>${mapWeatherCode(code)}</div>
+                        <div>${max}° / ${min}°</div>
+                    `;
+                    twoDays.appendChild(item);
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -705,26 +745,42 @@
         const widgetPhotos = document.getElementById("widget-photos");
 
         fetchCsv(GID_PHOTOS).then(rows => {
+            console.log("Lignes onglet photos :", rows);
             photos = [];
             logoPhoto = null;
 
-            rows.forEach(r => {
-                const url = r["url"];
-                const legend = (r["legende"] || "").trim();
-                if (!url) return;
+            // garder toutes les lignes avec une URL non vide
+            const dataRows = rows.filter(r => (r["url"] || "").trim() !== "");
 
-                if (legend.toLowerCase() === "logo") {
-                    logoPhoto = r;
-                } else {
-                    photos.push(r);
-                }
+            if (!dataRows.length) {
+                const logoImg = document.getElementById("logo-img");
+                logoImg.style.display = "none";
+                widgetPhotos.style.display = "none";
+                return;
+            }
+
+            // chercher une ligne avec "logo" dans la légende
+            let candidateLogo = dataRows.find(r => {
+                const legend = (r["legende"] || "").toLowerCase();
+                return legend.includes("logo");
             });
 
-            if (logoPhoto) {
-                const logoImg = document.getElementById("logo-img");
-                logoImg.src = logoPhoto["url"];
-                logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
+            // sinon, prendre la première ligne comme logo
+            if (!candidateLogo) {
+                candidateLogo = dataRows[0];
             }
+
+            logoPhoto = candidateLogo;
+
+            // appliquer le logo en haut à droite
+            const logoImg = document.getElementById("logo-img");
+            logoImg.src = (logoPhoto["url"] || "").trim();
+            logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
+            logoImg.style.display = "block";
+            console.log("Logo utilisé :", logoPhoto);
+
+            // le reste pour le carrousel
+            photos = dataRows.filter(r => r !== logoPhoto);
 
             if (!photos.length) {
                 widgetPhotos.style.display = "none";
@@ -750,22 +806,24 @@
     }
 
     function showPhoto() {
+        if (!photos.length) return;
         const p = photos[currentPhoto];
-        document.getElementById("photo-img").src = p["url"];
+        console.log("Affichage photo :", p);
+        document.getElementById("photo-img").src = (p["url"] || "").trim();
         document.getElementById("photo-caption").textContent = p["legende"] || "";
     }
 
     /********* 10. INIT + RAFRAÎCHISSEMENT ********/
 
     async function init() {
-        await loadSettings();        // lit l’onglet parametres si configuré
+        await loadSettings();
         loadTarifs();
         loadWeather();
         loadMenu();
         loadInfos();
         loadPhotos();
         loadMentions();
-        setupIntervals();            // met en place les rafraîchissements automatiques
+        setupIntervals();
     }
 
     init();
