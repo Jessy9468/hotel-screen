@@ -116,30 +116,40 @@
 
         .details-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 24px;
+            grid-template-columns: 1fr auto;
+            column-gap: 24px;
+            row-gap: 4px;
             font-size: 14px;
-            margin-top: 16px;
+            margin-top: 32px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.15);
         }
         .detail-item-title {
             font-weight: 600;
+            text-align: left;
         }
         .detail-price {
             text-align: right;
             font-weight: 600;
         }
 
-        .footer-text {
-            font-size: 11px;
-            margin-top: 16px;
-            line-height: 1.3;
-            opacity: 0.85;
-        }
         .hotel-name {
             font-size: 16px;
             font-weight: 700;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 16px;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            margin-top: 8px;
+            line-height: 1.3;
+            opacity: 0.85;
+        }
+
+        /* Zone bas de panel gauche (Bienvenue + mentions) collée au bas */
+        .panel-bottom {
+            margin-top: auto;
         }
 
         /* Colonne droite : widgets */
@@ -198,6 +208,8 @@
             gap: 16px;
             font-size: 12px;
             opacity: 0.8;
+            margin-top: 4px;
+            flex-wrap: wrap;
         }
 
         /* Menu du jour */
@@ -286,11 +298,14 @@
             <!-- rempli par Google Sheets -->
         </div>
 
-        <div class="hotel-name" id="hotel-name">
-            Bienvenue à l'hôtel ibis Vitré Centre
-        </div>
-        <div class="footer-text" id="footer-text">
-            <!-- rempli par l’onglet "mentions" -->
+        <!-- Bas du panneau gauche collé en bas -->
+        <div class="panel-bottom">
+            <div class="hotel-name" id="hotel-name">
+                Bienvenue à l'hôtel ibis Vitré Centre
+            </div>
+            <div class="footer-text" id="footer-text">
+                <!-- rempli par l’onglet "mentions" -->
+            </div>
         </div>
     </div>
 
@@ -324,7 +339,8 @@
                     </div>
                     <div class="weather-extra">
                         <div id="weather-highlow"></div>
-                        <div id="weather-code"></div>
+                        <div id="weather-humidity"></div>
+                        <div id="weather-wind"></div>
                     </div>
                 </div>
             </section>
@@ -362,23 +378,37 @@
     const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
 
     // GID de chaque onglet (d’après tes liens)
-    const GID_TARIFS   = "618820453";    // onglet tarifs
-    const GID_DETAILS  = "126337975";    // onglet details
-    const GID_MENU     = "695467279";    // onglet menu
-    const GID_INFOS    = "1342307900";   // onglet infos
-    const GID_PHOTOS   = "407579197";    // onglet photos
-    const GID_MENTIONS = "1712757088";   // onglet mentions
+    const GID_TARIFS     = "618820453";    // onglet tarifs
+    const GID_DETAILS    = "126337975";    // onglet details
+    const GID_MENU       = "695467279";    // onglet menu
+    const GID_INFOS      = "1342307900";   // onglet infos
+    const GID_PHOTOS     = "407579197";    // onglet photos
+    const GID_MENTIONS   = "1712757088";   // onglet mentions
+    // 👉 À créer : onglet "parametres" avec colonnes cle / valeur
+    // Récupère ensuite son gid et remplace ci-dessous :
+    const GID_PARAMETRES = "000000000"; // REMPLACE par le gid réel de l’onglet parametres
 
     // Coordonnées pour la météo (Vitré)
     const LAT = 48.123;
     const LON = -1.208;
 
+    // Valeurs par défaut des paramètres
+    const DEFAULT_SETTINGS = {
+        refreshMainMinutes: 10,      // tarifs / menu / infos / mentions / photos
+        refreshWeatherMinutes: 20,   // météo
+        photoIntervalSeconds: 8,     // durée entre 2 photos
+        weatherLocationLabel: "Vitré"
+    };
+    let SETTINGS = { ...DEFAULT_SETTINGS };
+
+    let mainIntervalId = null;
+    let weatherIntervalId = null;
+    let photoRotationId = null;
+
     /********* 2. FETCH & PARSE CSV *******/
 
     function fetchCsv(gid) {
-        // On utilise la version publiée du Google Sheet (format CSV)
         const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
-
         return fetch(url)
             .then(r => {
                 if (!r.ok) {
@@ -402,7 +432,6 @@
         for (let i = 0; i < line.length; i++) {
             const char = line[i];
             if (char === '"') {
-                // Gestion des guillemets doublés ("")
                 if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
                     current += '"';
                     i++;
@@ -433,7 +462,6 @@
             const obj = {};
             headerCols.forEach((h, i) => {
                 let val = cols[i] || "";
-                // enlever les guillemets autour si présents
                 val = val.replace(/^"(.*)"$/s, "$1").replace(/""/g, '"');
                 obj[h] = val.trim();
             });
@@ -442,10 +470,67 @@
         return rows;
     }
 
-    /********* 3. TARIFS & DÉTAILS *******/
+    /********* 3. PARAMETRES (onglet "parametres") *******/
+
+    async function loadSettings() {
+        // Si pas encore configuré, on garde les valeurs par défaut
+        if (GID_PARAMETRES === "000000000") {
+            document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+            return;
+        }
+
+        const rows = await fetchCsv(GID_PARAMETRES);
+        rows.forEach(r => {
+            const key = (r["cle"] || "").trim().toLowerCase();
+            const value = (r["valeur"] || "").trim();
+            if (!key) return;
+
+            switch (key) {
+                case "refresh_main_minutes":
+                    const rm = parseInt(value, 10);
+                    if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
+                    break;
+                case "refresh_weather_minutes":
+                    const rw = parseInt(value, 10);
+                    if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
+                    break;
+                case "photo_interval_seconds":
+                    const ps = parseInt(value, 10);
+                    if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
+                    break;
+                case "weather_location_label":
+                    if (value) SETTINGS.weatherLocationLabel = value;
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // Appliquer le libellé météo
+        document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+    }
+
+    function setupIntervals() {
+        const mainMs = SETTINGS.refreshMainMinutes * 60 * 1000;
+        const weatherMs = SETTINGS.refreshWeatherMinutes * 60 * 1000;
+
+        if (mainIntervalId) clearInterval(mainIntervalId);
+        if (weatherIntervalId) clearInterval(weatherIntervalId);
+
+        mainIntervalId = setInterval(() => {
+            loadTarifs();
+            loadMenu();
+            loadInfos();
+            loadMentions();
+            loadPhotos();
+        }, mainMs);
+
+        weatherIntervalId = setInterval(loadWeather, weatherMs);
+    }
+
+    /********* 4. TARIFS & DÉTAILS *******/
 
     function loadTarifs() {
-        // Onglet "tarifs" avec colonnes: type, sous_titre, prix
         fetchCsv(GID_TARIFS).then(rows => {
             const tbody = document.getElementById("rates-body");
             tbody.innerHTML = "";
@@ -462,21 +547,27 @@
             });
         });
 
-        // Onglet "details" avec colonnes: libelle, prix
         fetchCsv(GID_DETAILS).then(rows => {
             const container = document.getElementById("details-grid");
             container.innerHTML = "";
             rows.forEach(r => {
-                const item = document.createElement("div");
-                item.innerHTML = `
-                    <div class="detail-item-title">${r["libelle"] || ""}</div>
-                    <div class="detail-price">${r["prix"] || ""}</div>
-                `;
-                container.appendChild(item);
+                const lib = (r["libelle"] || "").trim();
+                const prix = (r["prix"] || "").trim();
+                if (!lib && !prix) return;
+
+                const labelDiv = document.createElement("div");
+                labelDiv.className = "detail-item-title";
+                labelDiv.textContent = lib;
+
+                const priceDiv = document.createElement("div");
+                priceDiv.className = "detail-price";
+                priceDiv.textContent = prix;
+
+                container.appendChild(labelDiv);
+                container.appendChild(priceDiv);
             });
         });
 
-        // Date du jour
         const dateEl = document.getElementById("rate-date");
         const now = new Date();
         const formatter = new Intl.DateTimeFormat("fr-FR", {
@@ -488,11 +579,10 @@
         dateEl.textContent = formatter.format(now);
     }
 
-    /********* 4. MÉTÉO *******/
+    /********* 5. MÉTÉO *******/
 
     function loadWeather() {
-        // API Open-Meteo (gratuite, sans clé)
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code&daily=temperature_2m_max,temperature_2m_min&timezone=auto`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min&timezone=auto`;
         fetch(url)
             .then(r => r.json())
             .then(data => {
@@ -509,8 +599,11 @@
                 document.getElementById("weather-desc").textContent =
                     mapWeatherCode(current.weather_code);
 
-                document.getElementById("weather-code").textContent =
-                    "Code " + current.weather_code;
+                document.getElementById("weather-humidity").textContent =
+                    "Humidité " + Math.round(current.relative_humidity_2m) + "%";
+
+                document.getElementById("weather-wind").textContent =
+                    "Vent " + Math.round(current.wind_speed_10m) + " km/h";
 
                 const updated = new Date(current.time);
                 document.getElementById("weather-updated").textContent =
@@ -534,7 +627,7 @@
         return "Conditions variables";
     }
 
-    /********* 5. MENU DU JOUR *******/
+    /********* 6. MENU DU JOUR *******/
 
     function loadMenu() {
         const widgetMenu = document.getElementById("widget-menu");
@@ -549,16 +642,13 @@
             const titre = (menu["titre"] || "").trim();
             const items = (menu["items"] || "").trim();
 
-            // Si rien à afficher → ne pas montrer le widget
             if (!titre && !items) {
                 widgetMenu.style.display = "none";
                 return;
             }
 
             widgetMenu.style.display = "";
-
-            document.getElementById("menu-title").textContent =
-                titre || "Menu du jour";
+            document.getElementById("menu-title").textContent = titre || "Menu du jour";
 
             const itemsHtml = items
                 .replace(/\\n/g, "<br>")
@@ -571,7 +661,7 @@
             now.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"});
     }
 
-    /********* 6. INFOS IMPORTANTES *******/
+    /********* 7. INFOS IMPORTANTES *******/
 
     function loadInfos() {
         const container = document.getElementById("infos-list");
@@ -591,15 +681,11 @@
                 count++;
             });
 
-            if (count === 0) {
-                widgetInfos.style.display = "none";
-            } else {
-                widgetInfos.style.display = "";
-            }
+            widgetInfos.style.display = (count === 0) ? "none" : "";
         });
     }
 
-    /********* 7. MENTIONS OBLIGATOIRES *******/
+    /********* 8. MENTIONS OBLIGATOIRES *******/
 
     function loadMentions() {
         fetchCsv(GID_MENTIONS).then(rows => {
@@ -609,13 +695,15 @@
         });
     }
 
-    /********* 8. PHOTOS (CARROUSEL) + LOGO *******/
+    /********* 9. PHOTOS (CARROUSEL) + LOGO *******/
 
     let photos = [];
     let currentPhoto = 0;
     let logoPhoto = null;
 
     function loadPhotos() {
+        const widgetPhotos = document.getElementById("widget-photos");
+
         fetchCsv(GID_PHOTOS).then(rows => {
             photos = [];
             logoPhoto = null;
@@ -639,14 +727,25 @@
             }
 
             if (!photos.length) {
+                widgetPhotos.style.display = "none";
+                if (photoRotationId) {
+                    clearInterval(photoRotationId);
+                    photoRotationId = null;
+                }
                 return;
+            } else {
+                widgetPhotos.style.display = "";
             }
+
             currentPhoto = 0;
             showPhoto();
-            setInterval(() => {
+
+            if (photoRotationId) clearInterval(photoRotationId);
+            const intervalMs = SETTINGS.photoIntervalSeconds * 1000;
+            photoRotationId = setInterval(() => {
                 currentPhoto = (currentPhoto + 1) % photos.length;
                 showPhoto();
-            }, 8000);
+            }, intervalMs);
         });
     }
 
@@ -656,19 +755,17 @@
         document.getElementById("photo-caption").textContent = p["legende"] || "";
     }
 
-    /********* 9. INIT + RAFRAÎCHISSEMENT ********/
+    /********* 10. INIT + RAFRAÎCHISSEMENT ********/
 
-    function init() {
+    async function init() {
+        await loadSettings();        // lit l’onglet parametres si configuré
         loadTarifs();
         loadWeather();
         loadMenu();
         loadInfos();
         loadPhotos();
         loadMentions();
-
-        setInterval(loadTarifs, 10 * 60 * 1000);
-        setInterval(() => { loadMenu(); loadInfos(); loadMentions(); }, 10 * 60 * 1000);
-        setInterval(loadWeather, 20 * 60 * 1000);
+        setupIntervals();            // met en place les rafraîchissements automatiques
     }
 
     init();
