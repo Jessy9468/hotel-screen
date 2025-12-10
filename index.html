@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8" />
     <title>Écran tarifs & infos - Ibis Vitré</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         html, body {
+            width: 100%;
             height: 100%;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: #000;
             color: #fff;
         }
+
+        /* on force vraiment à coller à l'écran */
         body {
+            width: 100vw;
+            height: 100vh;
             overflow: hidden;
         }
 
@@ -35,8 +41,10 @@
             grid-template-columns: 1.25fr 1fr;
             gap: 16px;
             padding: 16px;
+            width: 100vw;
             height: 100vh;
         }
+
         .panel {
             background: #111;
             border-radius: 16px;
@@ -44,7 +52,10 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
+            min-width: 0;
+            min-height: 0;
         }
+
         /* Colonne widgets : scrollable pour que le sticky fonctionne */
         .panel-widgets {
             overflow-y: auto;
@@ -158,6 +169,7 @@
             flex-direction: column;
             gap: 12px;
             flex: 1;
+            min-height: 0;
         }
         .widget {
             background: #151515;
@@ -249,7 +261,7 @@
         /* Photos / carrousel simple */
         .photo-wrapper {
             position: relative;
-            height: 240px; /* plus grand en hauteur */
+            height: 260px; /* un poil plus grand */
             border-radius: 12px;
             overflow: hidden;
             background: #000;
@@ -269,14 +281,24 @@
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
-        /* Adaptation si écran plus étroit (au cas où) */
-        @media (max-width: 1100px) {
+        /* Adaptation mobile uniquement en dessous de 800px (donc pas sur ta TV) */
+        @media (max-width: 800px) {
+            body {
+                height: auto;
+                overflow-y: auto;
+            }
+
             .layout {
                 grid-template-columns: 1fr;
-                overflow-y: auto;
+                width: 100%;
                 height: auto;
+                overflow-y: auto;
             }
-            body { overflow-y: auto; }
+
+            .panel-widgets {
+                max-height: none;
+                overflow-y: visible;
+            }
         }
     </style>
 </head>
@@ -396,29 +418,23 @@
 <script>
     /********* 1. CONFIG *******/
 
-    // ID PUBLIC (après "d/e/" dans ton lien publié)
     const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
 
-    // GID de chaque onglet (d’après tes liens)
-    const GID_TARIFS     = "618820453";    // onglet tarifs
-    const GID_DETAILS    = "126337975";    // onglet details
-    const GID_MENU       = "695467279";    // onglet menu
-    const GID_INFOS      = "1342307900";   // onglet infos
-    const GID_PHOTOS     = "407579197";    // onglet photos
-    const GID_MENTIONS   = "1712757088";   // onglet mentions
-    // 👉 À créer : onglet "parametres" avec colonnes cle / valeur
-    // Récupère ensuite son gid et remplace ci-dessous :
-    const GID_PARAMETRES = "000000000"; // REMPLACE par le gid réel de l’onglet parametres
+    const GID_TARIFS     = "618820453";
+    const GID_DETAILS    = "126337975";
+    const GID_MENU       = "695467279";
+    const GID_INFOS      = "1342307900";
+    const GID_PHOTOS     = "407579197";
+    const GID_MENTIONS   = "1712757088";
+    const GID_PARAMETRES = "000000000"; // à remplacer si tu crées l’onglet
 
-    // Coordonnées pour la météo (Vitré)
     const LAT = 48.123;
     const LON = -1.208;
 
-    // Valeurs par défaut des paramètres
     const DEFAULT_SETTINGS = {
-        refreshMainMinutes: 10,      // tarifs / menu / infos / mentions / photos
-        refreshWeatherMinutes: 20,   // météo
-        photoIntervalSeconds: 8,     // durée entre 2 photos
+        refreshMainMinutes: 10,
+        refreshWeatherMinutes: 20,
+        photoIntervalSeconds: 8,
         weatherLocationLabel: "Vitré"
     };
     let SETTINGS = { ...DEFAULT_SETTINGS };
@@ -433,9 +449,7 @@
         const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
         return fetch(url)
             .then(r => {
-                if (!r.ok) {
-                    throw new Error("HTTP " + r.status);
-                }
+                if (!r.ok) throw new Error("HTTP " + r.status);
                 return r.text();
             })
             .then(text => parseCsv(text))
@@ -445,7 +459,6 @@
             });
     }
 
-    // Découpe une ligne CSV en tenant compte des guillemets
     function csvSplit(line) {
         const result = [];
         let current = "";
@@ -492,7 +505,7 @@
         return rows;
     }
 
-    /********* 3. PARAMETRES (onglet "parametres") *******/
+    /********* 3. PARAMETRES *******/
 
     async function loadSettings() {
         if (GID_PARAMETRES === "000000000") {
@@ -507,22 +520,23 @@
             if (!key) return;
 
             switch (key) {
-                case "refresh_main_minutes":
+                case "refresh_main_minutes": {
                     const rm = parseInt(value, 10);
                     if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
                     break;
-                case "refresh_weather_minutes":
+                }
+                case "refresh_weather_minutes": {
                     const rw = parseInt(value, 10);
                     if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
                     break;
-                case "photo_interval_seconds":
+                }
+                case "photo_interval_seconds": {
                     const ps = parseInt(value, 10);
                     if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
                     break;
+                }
                 case "weather_location_label":
                     if (value) SETTINGS.weatherLocationLabel = value;
-                    break;
-                default:
                     break;
             }
         });
@@ -599,7 +613,7 @@
         dateEl.textContent = formatter.format(now);
     }
 
-    /********* 5. MÉTÉO (actuel + demain) *******/
+    /********* 5. MÉTÉO *******/
 
     function loadWeather() {
         const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
@@ -629,7 +643,6 @@
                 document.getElementById("weather-updated").textContent =
                     "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
 
-                // 2 jours : aujourd'hui + demain
                 const twoDays = document.getElementById("weather-2days");
                 twoDays.innerHTML = "";
 
@@ -725,7 +738,7 @@
         });
     }
 
-    /********* 8. MENTIONS OBLIGATOIRES *******/
+    /********* 8. MENTIONS *******/
 
     function loadMentions() {
         fetchCsv(GID_MENTIONS).then(rows => {
@@ -735,7 +748,7 @@
         });
     }
 
-    /********* 9. PHOTOS (CARROUSEL) + LOGO *******/
+    /********* 9. PHOTOS + LOGO *******/
 
     let photos = [];
     let currentPhoto = 0;
@@ -745,11 +758,9 @@
         const widgetPhotos = document.getElementById("widget-photos");
 
         fetchCsv(GID_PHOTOS).then(rows => {
-            console.log("Lignes onglet photos :", rows);
             photos = [];
             logoPhoto = null;
 
-            // garder toutes les lignes avec une URL non vide
             const dataRows = rows.filter(r => (r["url"] || "").trim() !== "");
 
             if (!dataRows.length) {
@@ -759,27 +770,20 @@
                 return;
             }
 
-            // chercher une ligne avec "logo" dans la légende
             let candidateLogo = dataRows.find(r => {
                 const legend = (r["legende"] || "").toLowerCase();
                 return legend.includes("logo");
             });
 
-            // sinon, prendre la première ligne comme logo
-            if (!candidateLogo) {
-                candidateLogo = dataRows[0];
-            }
+            if (!candidateLogo) candidateLogo = dataRows[0];
 
             logoPhoto = candidateLogo;
 
-            // appliquer le logo en haut à droite
             const logoImg = document.getElementById("logo-img");
             logoImg.src = (logoPhoto["url"] || "").trim();
             logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
             logoImg.style.display = "block";
-            console.log("Logo utilisé :", logoPhoto);
 
-            // le reste pour le carrousel
             photos = dataRows.filter(r => r !== logoPhoto);
 
             if (!photos.length) {
@@ -808,12 +812,11 @@
     function showPhoto() {
         if (!photos.length) return;
         const p = photos[currentPhoto];
-        console.log("Affichage photo :", p);
         document.getElementById("photo-img").src = (p["url"] || "").trim();
         document.getElementById("photo-caption").textContent = p["legende"] || "";
     }
 
-    /********* 10. INIT + RAFRAÎCHISSEMENT ********/
+    /********* 10. INIT ********/
 
     async function init() {
         await loadSettings();
