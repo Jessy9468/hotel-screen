@@ -185,14 +185,21 @@
             opacity: 0.7;
         }
 
-        /* Météo compacte : hauteur réduite */
+        /* Météo compacte : hauteur vraiment réduite */
+        #widget-meteo {
+            padding: 6px 10px;           /* moins de padding global */
+        }
+        
         .weather-main {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: 4px;          /* moins d'espace */
+            gap: 4px;
             text-align: center;
-            padding: 4px 0;    /* réduit la hauteur */
+            padding: 0;
+            transform: scale(0.85);      /* on “rétrécit” tout le contenu */
+            transform-origin: top center;
+            margin-bottom: -12px;        /* on récupère la place en bas */
         }
         
         .weather-top {
@@ -202,7 +209,7 @@
         }
         
         .weather-temp {
-            font-size: 26px;   /* réduit */
+            font-size: 24px;
             font-weight: 700;
         }
         
@@ -213,9 +220,8 @@
         
         .weather-extra {
             display: flex;
-            justify-content: space-between;
-            padding: 0 4px;
-            gap: 8px;
+            justify-content: space-around;
+            gap: 6px;
             font-size: 10px;
             opacity: 0.8;
             flex-wrap: wrap;
@@ -223,18 +229,18 @@
         
         .weather-2days {
             display: flex;
-            justify-content: space-between;
-            padding: 0 4px;
+            justify-content: space-around;
             gap: 6px;
             font-size: 10px;
             opacity: 0.9;
+            flex-wrap: wrap;
         }
         
         .weather-2days-item {
             background: rgba(255,255,255,0.08);
             border-radius: 6px;
-            padding: 3px 6px;    /* plus compact */
-            min-width: 100px;    /* moins large */
+            padding: 3px 6px;
+            min-width: 100px;
         }
 
 
@@ -943,4 +949,5 @@
 </script>
 </body>
 </html>
+
 
