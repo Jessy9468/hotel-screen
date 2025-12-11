@@ -4,319 +4,243 @@
     <meta charset="UTF-8" />
     <title>Écran tarifs & infos - Ibis Vitré</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <!-- Petit favicon inline pour éviter l’erreur 404 -->
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' ry='12' fill='%23CC0033'/%3E%3Ctext x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-size='34' fill='white' font-family='Arial, sans-serif'%3Ei%3C/text%3E%3C/svg%3E">
 
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    <link rel="icon" 
+          href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' 
+          viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' ry='12' 
+          fill='%23CC0033'/%3E%3Ctext x='50%25' y='50%25' dy='.35em' 
+          text-anchor='middle' font-size='34' fill='white' 
+          font-family='Arial, sans-serif'%3Ei%3C/text%3E%3C/svg%3E">
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: #000;
-            color: #fff;
-        }
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+    color: #fff;
+}
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
 
-        /* Grille principale */
-        .layout {
-            display: grid;
-            grid-template-columns: 1.25fr 1fr;
-            gap: 16px;
-            padding: 16px;
-            width: 100vw;
-            height: 100vh;
-            transform-origin: top left;
-        }
+/* --- LAYOUT --- */
+.layout {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 16px;
+    padding: 16px;
+    width: 100vw;
+    height: 100vh;
+    transform-origin: top left;
+}
 
-        .panel {
-            background: #111;
-            border-radius: 16px;
-            padding: 14px 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            min-height: 0;
-        }
+.panel {
+    background: #111;
+    border-radius: 16px;
+    padding: 14px 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+}
 
-        .panel-widgets {
-            overflow: hidden; /* pas de scroll pour la colonne widgets */
-        }
+.panel-widgets {
+    overflow: hidden;
+}
 
-        /* Panneau tarifs */
-        .panel-header-top {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* centre le bloc titre */
-            margin-bottom: 10px;
-            padding-top: 4px;
-        }
+/* --- TARIFS --- */
+.panel-header-top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.panel-logo {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    max-height: 60px;
+    object-fit: contain;
+}
+.panel-title-block {
+    text-align: center;
+    line-height: 1.25;
+}
+.panel-title-line1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+.panel-subtitle {
+    font-size: 13px;
+    opacity: .85;
+}
 
-        .panel-logo {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            max-height: 60px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
-        }
+.rate-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    opacity: .9;
+}
+.rate-date { font-weight: 600; }
 
-        .panel-title-block {
-            text-align: center;
-        }
+.rates-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 17px;
+}
+.rates-table thead tr { background: #CC0033; }
+.rates-table thead th {
+    padding: 8px 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+.rates-table tbody tr:nth-child(odd) { background: #E5093B; }
+.rates-table tbody tr:nth-child(even){ background: #F2405F; }
+.rates-table td { padding: 10px; }
+.rates-label { font-weight: 600; }
 
-        .panel-title-line1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .panel-subtitle {
-            font-size: 13px;
-            opacity: 0.8;
-            margin-top: 3px;
-        }
+/* --- DETAILS --- */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 4px;
+    column-gap: 20px;
+    margin-top: 18px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
 
-        .rate-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        .rate-date { font-weight: 600; }
+/* --- FOOTER PANEL --- */
+.hotel-name {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 700;
+}
+.footer-text {
+    text-align: center;
+    font-size: 11px;
+    opacity: .85;
+}
+.panel-bottom { margin-top: auto; }
 
-        .rates-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 6px;
-            font-size: 17px;
-        }
-        .rates-table thead tr { background: #CC0033; }
-        .rates-table thead th {
-            padding: 8px 10px;
-            text-align: left;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: .05em;
-        }
-        .rates-table tbody tr:nth-child(odd) { background: #E5093B; }
-        .rates-table tbody tr:nth-child(even){ background: #F2405F; }
-        .rates-table td {
-            padding: 10px;
-            vertical-align: middle;
-        }
-        .rates-label { font-weight: 600; }
-        .rates-sub   { font-size: 11px; opacity: 0.9; }
-        .rates-price { text-align: right; font-weight: 700; }
+/* --- WIDGETS --- */
+.widgets {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 0;
+}
+.widget {
+    background: #151515;
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.widget-sticky { position: sticky; top: 0; }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            column-gap: 20px;
-            row-gap: 3px;
-            font-size: 13px;
-            margin-top: 18px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
-        .detail-item-title { font-weight: 600; text-align: left; }
-        .detail-price      { text-align: right; font-weight: 600; }
+/* --- INFOS IMPORTANTES --- */
+.info-item { font-size: 13px; margin-bottom: 4px; }
 
-        .hotel-name {
-            font-size: 15px;
-            font-weight: 700;
-            text-align: center;
-            margin-top: 14px;
-        }
+/* --- METEO (NOUVELLE VERSION) --- */
+#widget-meteo { padding: 10px 14px; }
 
-        .footer-text {
-            font-size: 10px;
-            margin-top: 4px;
-            line-height: 1.3;
-            opacity: 0.85;
-        }
+.weather-main {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 12px;
+    align-items: center;
+}
 
-        .panel-bottom { margin-top: auto; }
+/* METEO DU JOUR */
+.weather-today { text-align: center; }
+.weather-temp {
+    font-size: 32px;
+    font-weight: 700;
+}
+.weather-desc {
+    font-size: 14px;
+    opacity: .9;
+    margin-bottom: 4px;
+}
+.weather-extra {
+    font-size: 12px;
+    opacity: .85;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
 
-        /* Widgets colonne droite */
-        .widgets {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex: 1;
-            min-height: 0;
-        }
-        .widget {
-            background: #151515;
-            border-radius: 14px;
-            padding: 10px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .widget-sticky {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+/* METEO DEMAIN */
+.weather-tomorrow {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 6px 8px;
+    text-align: center;
+    font-size: 12px;
+}
+.weather-tomorrow-icon {
+    display: block;
+    font-size: 20px;
+}
+.weather-tomorrow-temp {
+    font-weight: 600;
+    margin-top: 3px;
+}
 
-        .widget-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .widget-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .widget-sub {
-            font-size: 11px;
-            opacity: 0.7;
-        }
+/* --- MENU DU JOUR --- */
+.menu-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+.menu-items { font-size: 13px; line-height: 1.4; }
 
-        /* Météo compacte : hauteur vraiment réduite */
-        #widget-meteo {
-            padding: 6px 10px;           /* moins de padding global */
-        }
-        
-        .weather-main {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 4px;
-            text-align: center;
-            padding: 0;
-            transform: scale(0.85);      /* on “rétrécit” tout le contenu */
-            transform-origin: top center;
-            margin-bottom: -12px;        /* on récupère la place en bas */
-        }
-        
-        .weather-top {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-        
-        .weather-temp {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        
-        .weather-desc {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-        
-        .weather-extra {
-            display: flex;
-            justify-content: space-around;
-            gap: 6px;
-            font-size: 10px;
-            opacity: 0.8;
-            flex-wrap: wrap;
-        }
-        
-        .weather-2days {
-            display: flex;
-            justify-content: space-around;
-            gap: 6px;
-            font-size: 10px;
-            opacity: 0.9;
-            flex-wrap: wrap;
-        }
-        
-        .weather-2days-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 6px;
-            padding: 3px 6px;
-            min-width: 100px;
-        }
-
-
-        /* Menu du jour */
-        .menu-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .menu-items {
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        /* Infos importantes */
-        .info-item {
-            font-size: 13px;
-            line-height: 1.4;
-            margin-bottom: 3px;
-        }
-
-        /* Photos / carrousel – plein largeur, un peu plus haut, cover */
-        .photo-wrapper {
-            position: relative;
-            height: 260px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
-        }
-        .photo-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* plein écran en largeur, esthétique */
-            display: block;
-        }
-        .photo-caption {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            padding: 6px 10px;
-            font-size: 12px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        }
-
-        @media (max-width: 600px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-            .layout {
-                grid-template-columns: 1fr;
-                width: 100%;
-                height: auto;
-                transform: none;
-            }
-            .panel-widgets {
-                overflow: visible;
-            }
-        }
-    </style>
+/* --- PHOTOS CARROUSEL --- */
+.photo-wrapper {
+    position: relative;
+    height: 260px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.photo-caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+</style>
 </head>
 <body>
 
 <div class="layout" id="layout-root">
 
-    <!-- COLONNE GAUCHE : TARIFS -->
-    <div class="panel" id="panel-tarifs">
+    <!-- PANEL TARIFS -->
+    <div class="panel">
         <div class="panel-header-top">
-            <img id="logo-img" class="panel-logo" src="" alt="Logo hôtel" />
+            <img id="logo-img" class="panel-logo" src="" alt="Logo hôtel">
             <div class="panel-title-block">
-                <div class="panel-title-line1">Prix des chambres /  Room rates</div>
+                <div class="panel-title-line1">Prix des chambres / Room rates</div>
                 <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
             </div>
         </div>
-
         <div class="rate-header">
             <div>Room rates</div>
             <div class="rate-date" id="rate-date"></div>
@@ -324,10 +248,10 @@
 
         <table class="rates-table">
             <thead>
-            <tr>
-                <th>Type de prestation</th>
-                <th style="text-align:right;">Prix / Rates</th>
-            </tr>
+                <tr>
+                    <th>Type de prestation</th>
+                    <th style="text-align:right;">Prix / Rates</th>
+                </tr>
             </thead>
             <tbody id="rates-body"></tbody>
         </table>
@@ -342,11 +266,11 @@
         </div>
     </div>
 
-    <!-- COLONNE DROITE : WIDGETS -->
+    <!-- ▼▼ COLONNE DROITE : WIDGETS ▼▼ -->
     <div class="panel panel-widgets">
         <div class="widgets">
 
-            <!-- INFOS IMPORTANTES -->
+            <!-- INFORMATIONS IMPORTANTES -->
             <section class="widget widget-sticky" id="widget-infos">
                 <div class="widget-header">
                     <div class="widget-title">Informations importantes</div>
@@ -365,16 +289,26 @@
                 </div>
 
                 <div class="weather-main">
-                    <div class="weather-top">
+
+                    <!-- MÉTÉO DU JOUR -->
+                    <div class="weather-today">
                         <div class="weather-temp" id="weather-temp">--°C</div>
                         <div class="weather-desc" id="weather-desc">Chargement…</div>
+
+                        <div class="weather-extra">
+                            <span id="weather-highlow"></span>
+                            <span id="weather-humidity"></span>
+                            <span id="weather-wind"></span>
+                        </div>
                     </div>
-                    <div class="weather-extra">
-                        <div id="weather-highlow"></div>
-                        <div id="weather-humidity"></div>
-                        <div id="weather-wind"></div>
+
+                    <!-- MÉTÉO DE DEMAIN -->
+                    <div class="weather-tomorrow">
+                        <div class="weather-tomorrow-icon" id="tomorrow-icon">☀️</div>
+                        <div id="tomorrow-desc">Demain</div>
+                        <div class="weather-tomorrow-temp" id="tomorrow-temp">--° / --°</div>
                     </div>
-                    <div class="weather-2days" id="weather-2days"></div>
+
                 </div>
             </section>
 
@@ -384,6 +318,7 @@
                     <div class="widget-title" id="menu-widget-title">Menu du jour</div>
                     <div class="widget-sub" id="menu-date"></div>
                 </div>
+
                 <div class="menu-title" id="menu-title">Chargement…</div>
                 <div class="menu-items" id="menu-items"></div>
             </section>
@@ -393,6 +328,7 @@
                 <div class="widget-header">
                     <div class="widget-title">Découvrir l'hôtel</div>
                 </div>
+
                 <div class="photo-wrapper">
                     <img id="photo-img" src="" alt="Photo hôtel" />
                     <div class="photo-caption" id="photo-caption"></div>
@@ -401,553 +337,449 @@
 
         </div>
     </div>
+
 </div>
+    <script>
+/*********************
+ *   CONFIG GÉNÉRALE
+ *********************/
+const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
 
-<script>
-    /********* 1. CONFIG GÉNÉRALE *********/
+const GID_TARIFS     = "618820453";
+const GID_DETAILS    = "126337975";
+const GID_MENU       = "695467279";
+const GID_INFOS      = "1342307900";
+const GID_PHOTOS     = "407579197";
+const GID_MENTIONS   = "1712757088";
+const GID_PARAMETRES = "1182660406";
 
-    const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
+const LAT = 48.123;
+const LON = -1.208;
 
-    const GID_TARIFS     = "618820453";
-    const GID_DETAILS    = "126337975";
-    const GID_MENU       = "695467279";
-    const GID_INFOS      = "1342307900";
-    const GID_PHOTOS     = "407579197";
-    const GID_MENTIONS   = "1712757088";
-    const GID_PARAMETRES = "1182660406"; // onglet "parametres"
+const DEFAULT_SETTINGS = {
+    refreshMainMinutes: 10,
+    refreshWeatherMinutes: 20,
+    photoIntervalSeconds: 8,
+    weatherLocationLabel: "Vitré",
+    screenWidthPx: null,
+    screenHeightPx: null,
+    uiScale: 1,
+    menuWidgetTitle: "Menu du jour"
+};
 
-    const LAT = 48.123;
-    const LON = -1.208;
+let SETTINGS = { ...DEFAULT_SETTINGS };
 
-    const DEFAULT_SETTINGS = {
-        refreshMainMinutes: 10,
-        refreshWeatherMinutes: 20,
-        photoIntervalSeconds: 8,
-        weatherLocationLabel: "Vitré",
-        screenWidthPx: null,
-        screenHeightPx: null,
-        uiScale: 1,
-        menuWidgetTitle: "Menu du jour"
-    };
-    let SETTINGS = { ...DEFAULT_SETTINGS };
+let mainIntervalId = null;
+let weatherIntervalId = null;
+let photoRotationId = null;
 
-    let mainIntervalId = null;
-    let weatherIntervalId = null;
-    let photoRotationId = null;
 
-    /********* UTILS *********/
+/*********************
+ *   UTILS CSV
+ *********************/
+function fetchCsv(gid) {
+    const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
 
-    function fetchCsv(gid) {
-        const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
-        return fetch(url)
-            .then(r => {
-                if (!r.ok) throw new Error("HTTP " + r.status);
-                return r.text();
-            })
-            .then(text => parseCsv(text))
-            .catch(err => {
-                console.error("Erreur fetchCsv pour gid", gid, err);
-                return [];
-            });
+    return fetch(url)
+        .then(r => r.ok ? r.text() : "")
+        .then(parseCsv)
+        .catch(() => []);
+}
+
+function parseCsv(text) {
+    if (!text) return [];
+    const lines = text.trim().split(/\r?\n/);
+    const header = splitCsvLine(lines[0]);
+
+    return lines.slice(1).map(l => {
+        const cols = splitCsvLine(l);
+        const obj = {};
+        header.forEach((h, i) => obj[h] = (cols[i] || "").trim());
+        return obj;
+    });
+}
+
+function splitCsvLine(line) {
+    let out = [], cur = "", q = false;
+    for (let c of line) {
+        if (c === '"') q = !q;
+        else if (c === "," && !q) { out.push(cur); cur = ""; }
+        else cur += c;
+    }
+    out.push(cur);
+    return out;
+}
+
+function escapeHtml(str) {
+    return str.replace(/[&<>]/g, c => 
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c] )
+    );
+}
+
+function normalizeImageUrl(u) {
+    if (!u) return "";
+    u = u.trim();
+
+    // Déjà une URL directe
+    if (!u.includes("drive.google.com")) return u;
+
+    // Format Drive standard ?export=view&id=xxx
+    if (u.includes("uc?export=view&id=")) return u;
+
+    // /file/d/ID/... ?
+    let match = u.match(/\/file\/d\/([^\/]+)/);
+    if (match && match[1]) {
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
     }
 
-    function csvSplit(line) {
-        const result = [];
-        let current = "";
-        let inQuotes = false;
+    // ?id=ID
+    match = u.match(/[?&]id=([^&]+)/);
+    if (match && match[1]) {
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
 
-        for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            if (char === '"') {
-                if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
-                    current += '"';
-                    i++;
-                } else {
-                    inQuotes = !inQuotes;
-                }
-            } else if (char === ',' && !inQuotes) {
-                result.push(current);
-                current = "";
-            } else {
-                current += char;
-            }
+    return u;
+}
+
+
+/*********************
+ *   PARAMÈTRES
+ *********************/
+async function loadSettings() {
+    const rows = await fetchCsv(GID_PARAMETRES);
+
+    rows.forEach(r => {
+        const key = (r["cle"] || "").toLowerCase();
+        const val = (r["valeur"] || "").trim();
+
+        switch (key) {
+            case "refresh_main_minutes":
+                if (+val > 0) SETTINGS.refreshMainMinutes = +val;
+                break;
+            case "refresh_weather_minutes":
+                if (+val > 0) SETTINGS.refreshWeatherMinutes = +val;
+                break;
+            case "photo_interval_seconds":
+                if (+val > 0) SETTINGS.photoIntervalSeconds = +val;
+                break;
+            case "weather_location_label":
+                if (val) SETTINGS.weatherLocationLabel = val;
+                break;
+            case "screen_width_px":
+                if (+val > 0) SETTINGS.screenWidthPx = +val;
+                break;
+            case "screen_height_px":
+                if (+val > 0) SETTINGS.screenHeightPx = +val;
+                break;
+            case "ui_scale":
+                if (+val > 0) SETTINGS.uiScale = parseFloat(val.replace(",", "."));
+                break;
+            case "menu_widget_title":
+                if (val) SETTINGS.menuWidgetTitle = val;
+                break;
         }
-        result.push(current);
-        return result;
+    });
+
+    document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+    document.getElementById("menu-widget-title").textContent = SETTINGS.menuWidgetTitle;
+
+    applyScaling();
+}
+
+function applyScaling() {
+    const root = document.getElementById("layout-root");
+    if (!root) return;
+
+    let scale = 1;
+
+    if (SETTINGS.screenWidthPx && SETTINGS.screenHeightPx) {
+        const sx = window.innerWidth / SETTINGS.screenWidthPx;
+        const sy = window.innerHeight / SETTINGS.screenHeightPx;
+        scale = Math.min(sx, sy);
     }
 
-    function parseCsv(text) {
-        const lines = text.trim().split(/\r?\n/);
-        if (lines.length === 0) return [];
-        const headerCols = csvSplit(lines[0]).map(h => h.trim());
-        const rows = [];
+    scale *= SETTINGS.uiScale;
+    root.style.transform = `scale(${scale})`;
+}
 
-        for (let idx = 1; idx < lines.length; idx++) {
-            const line = lines[idx];
-            if (!line.trim()) continue;
-            const cols = csvSplit(line);
-            const obj = {};
-            headerCols.forEach((h, i) => {
-                let val = cols[i] || "";
-                val = val.replace(/^"(.*)"$/s, "$1").replace(/""/g, '"');
-                obj[h] = val.trim();
-            });
-            rows.push(obj);
-        }
-        return rows;
-    }
+window.addEventListener("resize", applyScaling);
 
-    function escapeHtml(str) {
-        return str
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-    }
+function setupIntervals() {
+    clearInterval(mainIntervalId);
+    clearInterval(weatherIntervalId);
 
-    function normalizeImageUrl(u) {
-        if (!u) return "";
-        u = u.trim();
-
-        // Si c'est déjà un raw GitHub ou autre URL directe, on laisse
-        if (!u.includes("drive.google.com")) {
-            return u;
-        }
-
-        // Déjà au bon format Drive
-        if (u.includes("uc?export=view")) {
-            return u;
-        }
-
-        // /file/d/ID/...
-        let m = u.match(/\/file\/d\/([^/]+)/);
-        // ?id=ID
-        if (!m) {
-            m = u.match(/[?&]id=([^&]+)/);
-        }
-
-        if (m && m[1]) {
-            const id = m[1];
-            return "https://drive.google.com/uc?export=view&id=" + id;
-        }
-
-        return u;
-    }
-
-    /********* 2. PARAMÈTRES (onglet parametres) *********/
-
-    async function loadSettings() {
-        try {
-            const rows = await fetchCsv(GID_PARAMETRES);
-            rows.forEach(r => {
-                const key = (r["cle"] || "").trim().toLowerCase();
-                const value = (r["valeur"] || "").trim();
-                if (!key) return;
-
-                switch (key) {
-                    case "refresh_main_minutes": {
-                        const rm = parseInt(value, 10);
-                        if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
-                        break;
-                    }
-                    case "refresh_weather_minutes": {
-                        const rw = parseInt(value, 10);
-                        if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
-                        break;
-                    }
-                    case "photo_interval_seconds": {
-                        const ps = parseInt(value, 10);
-                        if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
-                        break;
-                    }
-                    case "weather_location_label":
-                        if (value) SETTINGS.weatherLocationLabel = value;
-                        break;
-                    case "screen_width_px": {
-                        const sw = parseInt(value, 10);
-                        if (!isNaN(sw) && sw > 0) SETTINGS.screenWidthPx = sw;
-                        break;
-                    }
-                    case "screen_height_px": {
-                        const sh = parseInt(value, 10);
-                        if (!isNaN(sh) && sh > 0) SETTINGS.screenHeightPx = sh;
-                        break;
-                    }
-                    case "ui_scale": {
-                        const s = parseFloat(value.replace(",", "."));
-                        if (!isNaN(s) && s > 0) SETTINGS.uiScale = s;
-                        break;
-                    }
-                    case "menu_widget_title":
-                        if (value) SETTINGS.menuWidgetTitle = value;
-                        break;
-                }
-            });
-        } catch (e) {
-            console.error("Erreur loadSettings", e);
-        }
-
-        document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
-        document.getElementById("menu-widget-title").textContent = SETTINGS.menuWidgetTitle;
-        applyScaling();
-    }
-
-    function applyScaling() {
-        const root = document.getElementById("layout-root");
-        if (!root) return;
-
-        let scale = 1;
-
-        if (SETTINGS.screenWidthPx && SETTINGS.screenHeightPx) {
-            const sx = window.innerWidth / SETTINGS.screenWidthPx;
-            const sy = window.innerHeight / SETTINGS.screenHeightPx;
-            scale = Math.min(sx, sy);
-        }
-
-        if (SETTINGS.uiScale && SETTINGS.uiScale > 0) {
-            scale *= SETTINGS.uiScale;
-        }
-
-        root.style.transform = `scale(${scale})`;
-    }
-
-    function setupIntervals() {
-        const mainMs = SETTINGS.refreshMainMinutes * 60 * 1000;
-        const weatherMs = SETTINGS.refreshWeatherMinutes * 60 * 1000;
-
-        if (mainIntervalId) clearInterval(mainIntervalId);
-        if (weatherIntervalId) clearInterval(weatherIntervalId);
-
-        mainIntervalId = setInterval(() => {
-            loadTarifs();
-            loadMenu();
-            loadInfos();
-            loadMentions();
-            loadPhotos();
-        }, mainMs);
-
-        weatherIntervalId = setInterval(loadWeather, weatherMs);
-    }
-
-    window.addEventListener("resize", applyScaling);
-
-    /********* 3. TARIFS & DÉTAILS *********/
-
-    function loadTarifs() {
-        fetchCsv(GID_TARIFS).then(rows => {
-            const tbody = document.getElementById("rates-body");
-            tbody.innerHTML = "";
-            rows.forEach(r => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td>
-                        <div class="rates-label">${escapeHtml(r["type"] || "")}</div>
-                        <div class="rates-sub">${escapeHtml(r["sous_titre"] || "")}</div>
-                    </td>
-                    <td class="rates-price">${escapeHtml(r["prix"] || "")}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        });
-
-        fetchCsv(GID_DETAILS).then(rows => {
-            const container = document.getElementById("details-grid");
-            container.innerHTML = "";
-            rows.forEach(r => {
-                const lib = (r["libelle"] || "").trim();
-                const prix = (r["prix"] || "").trim();
-                if (!lib && !prix) return;
-
-                const labelDiv = document.createElement("div");
-                labelDiv.className = "detail-item-title";
-                labelDiv.textContent = lib;
-
-                const priceDiv = document.createElement("div");
-                priceDiv.className = "detail-price";
-                priceDiv.textContent = prix;
-
-                container.appendChild(labelDiv);
-                container.appendChild(priceDiv);
-            });
-        });
-
-        const dateEl = document.getElementById("rate-date");
-        const now = new Date();
-        const formatter = new Intl.DateTimeFormat("fr-FR", {
-            weekday: "long", day: "numeric", month: "long", year: "numeric"
-        });
-        dateEl.textContent = formatter.format(now);
-    }
-
-    /********* 4. MÉTÉO (largeur complète + icônes) *********/
-
-    function mapWeatherCodeLabel(code) {
-        if (code === 0) return "Ciel dégagé";
-        if ([1,2,3].includes(code)) return "Partiellement nuageux";
-        if ([45,48].includes(code)) return "Brouillard";
-        if ([51,53,55,56,57].includes(code)) return "Bruine";
-        if ([61,63,65].includes(code)) return "Pluie";
-        if ([71,73,75,77].includes(code)) return "Neige";
-        if ([80,81,82].includes(code)) return "Averses";
-        if ([95,96,99].includes(code)) return "Orages";
-        return "Conditions variables";
-    }
-
-    function mapWeatherCodeIcon(code) {
-        if (code === 0) return "☀️";
-        if ([1,2,3].includes(code)) return "🌤️";
-        if ([45,48].includes(code)) return "🌫️";
-        if ([51,53,55,56,57].includes(code)) return "🌦️";
-        if ([61,63,65].includes(code)) return "🌧️";
-        if ([71,73,75,77].includes(code)) return "❄️";
-        if ([80,81,82].includes(code)) return "🌧️";
-        if ([95,96,99].includes(code)) return "⛈️";
-        return "☁️";
-    }
-
-    function loadWeather() {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
-        fetch(url)
-            .then(r => r.json())
-            .then(data => {
-                const current = data.current;
-                const daily = data.daily;
-
-                document.getElementById("weather-temp").textContent =
-                    Math.round(current.temperature_2m) + "°C";
-                document.getElementById("weather-desc").innerHTML =
-                    mapWeatherCodeIcon(current.weather_code) + " " + mapWeatherCodeLabel(current.weather_code);
-
-                document.getElementById("weather-highlow").textContent =
-                    "Max " + Math.round(daily.temperature_2m_max[0]) +
-                    "° / Min " + Math.round(daily.temperature_2m_min[0]) + "°";
-                document.getElementById("weather-humidity").textContent =
-                    "Humidité " + Math.round(current.relative_humidity_2m) + "%";
-                document.getElementById("weather-wind").textContent =
-                    "Vent " + Math.round(current.wind_speed_10m) + " km/h";
-
-                const updated = new Date(current.time);
-                document.getElementById("weather-updated").textContent =
-                    "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
-
-                const twoDays = document.getElementById("weather-2days");
-                twoDays.innerHTML = "";
-
-                const labels = ["Aujourd'hui", "Demain"];
-                for (let i = 0; i < 2 && i < daily.time.length; i++) {
-                    const code = daily.weather_code[i];
-                    const max = Math.round(daily.temperature_2m_max[i]);
-                    const min = Math.round(daily.temperature_2m_min[i]);
-
-                    const item = document.createElement("div");
-                    item.className = "weather-2days-item";
-                    item.innerHTML = `
-                        <div class="weather-2days-label">${labels[i]}</div>
-                        <div><span class="weather-2days-icon">${mapWeatherCodeIcon(code)}</span>${mapWeatherCodeLabel(code)}</div>
-                        <div>${max}° / ${min}°</div>
-                    `;
-                    twoDays.appendChild(item);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("weather-desc").textContent = "Météo indisponible";
-            });
-    }
-
-    /********* 5. MENU DU JOUR (titre modifiable + plusieurs lignes) *********/
-
-    function loadMenu() {
-        const widgetMenu = document.getElementById("widget-menu");
-
-        fetchCsv(GID_MENU).then(rows => {
-            if (!rows.length) {
-                widgetMenu.style.display = "none";
-                return;
-            }
-
-            const lines = [];
-            let subtitle = "";
-
-            // Sous-titre optionnel dans la première ligne (colonne sous_titre)
-            if ((rows[0]["sous_titre"] || "").trim()) {
-                subtitle = rows[0]["sous_titre"].trim();
-            }
-
-            // Chaque ligne du fichier = une ligne de menu (max 4)
-            rows.forEach(r => {
-                const titre = (r["titre"] || r["menu"] || "").trim();
-                const prix  = (r["prix"] || "").trim();
-                const items = (r["items"] || r["ligne"] || r["item"] || "").trim();
-
-                let txt = "";
-
-                if (titre && prix) {
-                    txt = `${titre} — ${prix}`;
-                } else if (titre && items) {
-                    txt = `${titre} — ${items}`;
-                } else if (titre) {
-                    txt = titre;
-                } else if (items) {
-                    txt = items;
-                }
-
-                if (txt) {
-                    lines.push(txt);
-                }
-            });
-
-            lines.splice(4); // max 4 lignes
-
-            if (!subtitle && !lines.length) {
-                widgetMenu.style.display = "none";
-                return;
-            }
-
-            widgetMenu.style.display = "";
-
-            document.getElementById("menu-title").textContent = subtitle || "";
-
-            const html = lines
-                .map(l => "• " + escapeHtml(l))
-                .join("<br>");
-            document.getElementById("menu-items").innerHTML = html;
-        });
-
-        const now = new Date();
-        document.getElementById("menu-date").textContent =
-            now.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"});
-    }
-
-    /********* 6. INFOS IMPORTANTES *********/
-
-    function loadInfos() {
-        const container = document.getElementById("infos-list");
-        const widgetInfos = document.getElementById("widget-infos");
-
-        fetchCsv(GID_INFOS).then(rows => {
-            container.innerHTML = "";
-            let count = 0;
-
-            rows.forEach(r => {
-                const texte = (r["texte"] || "").trim();
-                if (!texte) return;
-                const div = document.createElement("div");
-                div.className = "info-item";
-                div.textContent = "• " + texte;
-                container.appendChild(div);
-                count++;
-            });
-
-            widgetInfos.style.display = (count === 0) ? "none" : "";
-        });
-    }
-
-    /********* 7. MENTIONS *********/
-
-    function loadMentions() {
-        fetchCsv(GID_MENTIONS).then(rows => {
-            if (!rows.length) return;
-            const mention = rows[0]["mention"] || "";
-            document.getElementById("footer-text").textContent = mention;
-        });
-    }
-
-    /********* 8. PHOTOS + LOGO *********/
-
-    let photos = [];
-    let currentPhoto = 0;
-    let logoPhoto = null;
-
-    function loadPhotos() {
-        const widgetPhotos = document.getElementById("widget-photos");
-
-        fetchCsv(GID_PHOTOS).then(rows => {
-            photos = [];
-            logoPhoto = null;
-
-            const dataRows = rows.filter(r => (r["url"] || "").trim() !== "");
-
-            if (!dataRows.length) {
-                const logoImg = document.getElementById("logo-img");
-                logoImg.style.display = "none";
-                widgetPhotos.style.display = "none";
-                if (photoRotationId) {
-                    clearInterval(photoRotationId);
-                    photoRotationId = null;
-                }
-                return;
-            }
-
-            let candidateLogo = dataRows.find(r => {
-                const legend = (r["legende"] || "").toLowerCase();
-                return legend.includes("logo");
-            });
-            if (!candidateLogo) candidateLogo = dataRows[0];
-
-            logoPhoto = candidateLogo;
-
-            const logoImg = document.getElementById("logo-img");
-            logoImg.src = normalizeImageUrl(logoPhoto["url"] || "");
-            logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
-            logoImg.style.display = "block";
-
-            photos = dataRows.filter(r => r !== logoPhoto);
-
-            if (!photos.length) {
-                widgetPhotos.style.display = "none";
-                if (photoRotationId) {
-                    clearInterval(photoRotationId);
-                    photoRotationId = null;
-                }
-                return;
-            } else {
-                widgetPhotos.style.display = "";
-            }
-
-            currentPhoto = 0;
-            showPhoto();
-
-            if (photoRotationId) clearInterval(photoRotationId);
-            const intervalMs = SETTINGS.photoIntervalSeconds * 1000;
-            photoRotationId = setInterval(() => {
-                currentPhoto = (currentPhoto + 1) % photos.length;
-                showPhoto();
-            }, intervalMs);
-        });
-    }
-
-    function showPhoto() {
-        if (!photos.length) return;
-
-        const p = photos[currentPhoto];
-        const url = normalizeImageUrl(p["url"] || "");
-
-        const img = document.getElementById("photo-img");
-        img.src = url;
-        img.alt = p["legende"] || "";
-        img.onerror = function() {
-            console.error("Erreur de chargement image :", url);
-        };
-
-        document.getElementById("photo-caption").textContent = p["legende"] || "";
-    }
-
-    /********* 9. INIT *********/
-
-    async function init() {
-        await loadSettings();
+    mainIntervalId = setInterval(() => {
         loadTarifs();
-        loadWeather();
+        loadDetails();
         loadMenu();
         loadInfos();
         loadPhotos();
         loadMentions();
-        setupIntervals();
-    }
+    }, SETTINGS.refreshMainMinutes * 60 * 1000);
 
-    init();
+    weatherIntervalId = setInterval(loadWeather, SETTINGS.refreshWeatherMinutes * 60 * 1000);
+}
+
+
+/*********************
+ *   TARIFS
+ *********************/
+function loadTarifs() {
+    fetchCsv(GID_TARIFS).then(rows => {
+        const tbody = document.getElementById("rates-body");
+        tbody.innerHTML = "";
+
+        rows.forEach(r => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>
+                        <div class="rates-label">${escapeHtml(r.type || "")}</div>
+                        <div class="rates-sub">${escapeHtml(r.sous_titre || "")}</div>
+                    </td>
+                    <td class="rates-price">${escapeHtml(r.prix || "")}</td>
+                </tr>
+            `;
+        });
+
+        const now = new Date();
+        document.getElementById("rate-date").textContent =
+            now.toLocaleDateString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            });
+    });
+}
+
+function loadDetails() {
+    fetchCsv(GID_DETAILS).then(rows => {
+        const grid = document.getElementById("details-grid");
+        grid.innerHTML = "";
+
+        rows.forEach(r => {
+            if (!r.libelle && !r.prix) return;
+            grid.innerHTML += `
+                <div>${escapeHtml(r.libelle || "")}</div>
+                <div style="text-align:right;font-weight:600;">${escapeHtml(r.prix || "")}</div>
+            `;
+        });
+    });
+}
+
+
+/*********************
+ *   METEO
+ *********************/
+function iconFor(code) {
+    if (code === 0) return "☀️";
+    if ([1,2,3].includes(code)) return "🌤️";
+    if ([45,48].includes(code)) return "🌫️";
+    if ([51,53,55,56,57].includes(code)) return "🌦️";
+    if ([61,63,65].includes(code)) return "🌧️";
+    if ([71,73,75,77].includes(code)) return "❄️";
+    if ([80,81,82].includes(code)) return "🌧️";
+    if ([95,96,99].includes(code)) return "⛈️";
+    return "☁️";
+}
+function labelFor(code) {
+    if (code === 0) return "Ciel dégagé";
+    if ([1,2,3].includes(code)) return "Partiellement nuageux";
+    if ([45,48].includes(code)) return "Brouillard";
+    if ([51,53,55,56,57].includes(code)) return "Bruine";
+    if ([61,63,65].includes(code)) return "Pluie";
+    if ([71,73,75,77].includes(code)) return "Neige";
+    if ([80,81,82].includes(code)) return "Averses";
+    if ([95,96,99].includes(code)) return "Orages";
+    return "Conditions diverses";
+}
+
+function loadWeather() {
+    const url = `https://api.open-meteo.com/v1/forecast
+        ?latitude=${LAT}&longitude=${LON}
+        &current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m
+        &daily=temperature_2m_max,temperature_2m_min,weather_code
+        &timezone=auto`.replace(/\s+/g, "");
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+            const now = data.current;
+            const daily = data.daily;
+
+            // METEO DU JOUR
+            document.getElementById("weather-temp").textContent =
+                Math.round(now.temperature_2m) + "°C";
+            document.getElementById("weather-desc").innerHTML =
+                iconFor(now.weather_code) + " " + labelFor(now.weather_code);
+
+            document.getElementById("weather-highlow").textContent =
+                `Max ${Math.round(daily.temperature_2m_max[0])}° / Min ${
+                    Math.round(daily.temperature_2m_min[0])
+                }°`;
+
+            document.getElementById("weather-humidity").textContent =
+                `Humidité ${now.relative_humidity_2m}%`;
+
+            document.getElementById("weather-wind").textContent =
+                `Vent ${Math.round(now.wind_speed_10m)} km/h`;
+
+            document.getElementById("weather-updated").textContent =
+                "Maj " + new Date(now.time).toLocaleTimeString("fr-FR", {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+            // METEO DEMAIN
+            const codeTomorrow = daily.weather_code[1];
+            const maxTomorrow = Math.round(daily.temperature_2m_max[1]);
+            const minTomorrow = Math.round(daily.temperature_2m_min[1]);
+
+            document.getElementById("tomorrow-icon").textContent = iconFor(codeTomorrow);
+            document.getElementById("tomorrow-desc").textContent = labelFor(codeTomorrow);
+            document.getElementById("tomorrow-temp").textContent =
+                `${maxTomorrow}° / ${minTomorrow}°`;
+        });
+}
+
+
+/*********************
+ *   MENU DU JOUR
+ *********************/
+function loadMenu() {
+    fetchCsv(GID_MENU).then(rows => {
+        const widget = document.getElementById("widget-menu");
+        if (!rows.length) {
+            widget.style.display = "none";
+            return;
+        }
+
+        const first = rows[0];
+        const subtitle = first.sous_titre || "";
+        document.getElementById("menu-title").textContent = subtitle;
+
+        let lines = rows
+            .map(r => {
+                const t = r.titre || r.menu || "";
+                const p = r.prix || "";
+                const i = r.items || r.item || "";
+                if (t && p) return `${t} — ${p}`;
+                if (t && i) return `${t} — ${i}`;
+                return t || i;
+            })
+            .filter(x => x);
+
+        lines = lines.slice(0, 4);
+
+        document.getElementById("menu-items").innerHTML =
+            lines.map(l => "• " + escapeHtml(l)).join("<br>");
+
+        const now = new Date();
+        document.getElementById("menu-date").textContent =
+            now.toLocaleDateString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long"
+            });
+    });
+}
+
+
+/*********************
+ *   INFOS IMPORTANTES
+ *********************/
+function loadInfos() {
+    fetchCsv(GID_INFOS).then(rows => {
+        const container = document.getElementById("infos-list");
+        container.innerHTML = "";
+
+        rows.forEach(r => {
+            if (!r.texte) return;
+            container.innerHTML += `<div class="info-item">• ${escapeHtml(r.texte)}</div>`;
+        });
+    });
+}
+
+
+/*********************
+ *   MENTIONS
+ *********************/
+function loadMentions() {
+    fetchCsv(GID_MENTIONS).then(rows => {
+        if (!rows.length) return;
+        document.getElementById("footer-text").textContent =
+            rows[0].mention || "";
+    });
+}
+
+
+/*********************
+ *   PHOTOS + LOGO
+ *********************/
+let photos = [];
+let currentPhoto = 0;
+
+function loadPhotos() {
+    fetchCsv(GID_PHOTOS).then(rows => {
+        const valid = rows.filter(r => r.url);
+
+        let logoRow = valid.find(r => (r.legende || "").toLowerCase().includes("logo"));
+        if (!logoRow) logoRow = valid[0];
+
+        // LOGO
+        document.getElementById("logo-img").src = normalizeImageUrl(logoRow.url);
+
+        // PHOTOS (hors logo)
+        photos = valid.filter(r => r !== logoRow);
+
+        if (!photos.length) {
+            document.getElementById("widget-photos").style.display = "none";
+            return;
+        }
+
+        currentPhoto = 0;
+        showPhoto();
+
+        clearInterval(photoRotationId);
+        photoRotationId = setInterval(() => {
+            currentPhoto = (currentPhoto + 1) % photos.length;
+            showPhoto();
+        }, SETTINGS.photoIntervalSeconds * 1000);
+    });
+}
+
+function showPhoto() {
+    const p = photos[currentPhoto];
+    const url = normalizeImageUrl(p.url);
+
+    const img = document.getElementById("photo-img");
+    img.src = url;
+    img.alt = p.legende || "";
+    document.getElementById("photo-caption").textContent = p.legende || "";
+}
+
+
+/*********************
+ *   INIT
+ *********************/
+async function init() {
+    await loadSettings();
+
+    loadTarifs();
+    loadDetails();
+    loadMenu();
+    loadInfos();
+    loadMentions();
+    loadPhotos();
+    loadWeather();
+
+    setupIntervals();
+}
+
+init();
 </script>
+
 </body>
 </html>
 
-
+    
