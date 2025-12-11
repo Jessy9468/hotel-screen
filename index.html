@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <title>Écran tarifs & infos - Ibis Vitré</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <!-- Petit favicon inline pour éviter l’erreur 404 -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' ry='12' fill='%23CC0033'/%3E%3Ctext x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-size='34' fill='white' font-family='Arial, sans-serif'%3Ei%3C/text%3E%3C/svg%3E">
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -19,21 +22,6 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-        }
-
-        /* Logo en haut à droite */
-        .logo-container {
-            position: fixed;
-            top: 12px;
-            right: 24px;
-            z-index: 20;
-        }
-        .logo-container img {
-            max-height: 70px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
 
         /* Grille principale */
@@ -58,22 +46,40 @@
             min-height: 0;
         }
 
-        /* Colonne droite : pas de scroll interne */
         .panel-widgets {
-            overflow: hidden;
+            overflow: hidden; /* pas de scroll pour la colonne widgets */
+        }
+
+        /* Panneau tarifs */
+        .panel-header-top {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .panel-logo {
+            max-height: 60px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
+        }
+
+        .panel-title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .panel-title {
             font-size: 26px;
             font-weight: 700;
-            text-align: center;
-            margin-bottom: 8px;
         }
         .panel-subtitle {
             font-size: 13px;
-            text-align: center;
             opacity: 0.8;
-            margin-bottom: 10px;
         }
 
         .rate-header {
@@ -175,12 +181,12 @@
             opacity: 0.7;
         }
 
-        /* Météo (format compact comme avant) */
+        /* Météo (compact + carte bien remplie) */
         .weather-main {
             display: flex;
+            flex-direction: column;
             align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
+            gap: 4px;
         }
         .weather-temp {
             font-size: 32px;
@@ -195,22 +201,22 @@
             gap: 12px;
             font-size: 11px;
             opacity: 0.8;
-            margin-top: 4px;
+            margin-top: 2px;
             flex-wrap: wrap;
         }
         .weather-2days {
             display: flex;
-            gap: 10px;
-            margin-top: 6px;
+            gap: 8px;
+            margin-top: 4px;
             font-size: 11px;
-            opacity: 0.85;
+            opacity: 0.9;
             flex-wrap: wrap;
         }
         .weather-2days-item {
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.08);
             border-radius: 8px;
-            padding: 4px 6px;
-            min-width: 110px;
+            padding: 4px 8px;
+            min-width: 120px;
         }
         .weather-2days-label {
             font-weight: 600;
@@ -238,19 +244,25 @@
             margin-bottom: 3px;
         }
 
-        /* Photos / carrousel – un peu plus bas pour tout faire tenir */
+        /* Photos / carrousel – images non zoomées */
         .photo-wrapper {
             position: relative;
             height: 200px;
             border-radius: 12px;
             overflow: hidden;
             background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .photo-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* plus de zoom excessif */
             display: block;
+            background: #000;
         }
         .photo-caption {
             position: absolute;
@@ -280,21 +292,18 @@
     </style>
 </head>
 <body>
-<img
-  src="https://drive.google.com/uc?export=view&id=1t1j6YbZb9-WOjWaKeE1VIL0ZIXSXW9N-"
-  alt="Test Lobby"
-  style="position:fixed;bottom:10px;left:10px;width:200px;border:2px solid red;"
->
-<div class="logo-container">
-    <img id="logo-img" src="" alt="Logo hôtel" />
-</div>
 
 <div class="layout" id="layout-root">
 
     <!-- COLONNE GAUCHE : TARIFS -->
     <div class="panel" id="panel-tarifs">
-        <div class="panel-title">Prix des chambres</div>
-        <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
+        <div class="panel-header-top">
+            <img id="logo-img" class="panel-logo" src="" alt="Logo hôtel" />
+            <div class="panel-title-block">
+                <div class="panel-title">Prix des chambres</div>
+                <div class="panel-subtitle">Net prices in € VAT / par jour · per day</div>
+            </div>
+        </div>
 
         <div class="rate-header">
             <div>Room rates</div>
@@ -344,29 +353,23 @@
                 </div>
 
                 <div class="weather-main">
-                    <div>
-                        <div class="weather-temp" id="weather-temp">--°C</div>
-                        <div class="weather-desc" id="weather-desc">Chargement…</div>
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-desc" id="weather-desc">Chargement…</div>
+                    <div class="weather-extra">
+                        <div id="weather-highlow"></div>
+                        <div id="weather-humidity"></div>
+                        <div id="weather-wind"></div>
                     </div>
-                    <div>
-                        <div class="weather-extra">
-                            <div id="weather-highlow"></div>
-                            <div id="weather-humidity"></div>
-                            <div id="weather-wind"></div>
-                        </div>
-                        <div class="weather-2days" id="weather-2days"></div>
-                    </div>
+                    <div class="weather-2days" id="weather-2days"></div>
                 </div>
             </section>
 
             <!-- MENU DU JOUR -->
             <section class="widget" id="widget-menu">
                 <div class="widget-header">
-                    <!-- Titre du widget paramétrable via parametres.menu_widget_title -->
                     <div class="widget-title" id="menu-widget-title">Menu du jour</div>
                     <div class="widget-sub" id="menu-date"></div>
                 </div>
-                <!-- Sous-titre spécifique du jour (ex : "Formule 2 plats 19,90€") -->
                 <div class="menu-title" id="menu-title">Chargement…</div>
                 <div class="menu-items" id="menu-items"></div>
             </section>
@@ -491,7 +494,12 @@
         if (!u) return "";
         u = u.trim();
 
-        // Déjà au bon format
+        // Si c'est déjà un raw GitHub ou autre URL directe, on laisse
+        if (!u.includes("drive.google.com")) {
+            return u;
+        }
+
+        // Déjà au bon format Drive
         if (u.includes("uc?export=view")) {
             return u;
         }
@@ -743,62 +751,47 @@
                 return;
             }
 
-            let titreJour = "";
             const lines = [];
+            let subtitle = "";
 
-            // Si la première ligne a une colonne "titre", on la prend comme sous-titre du jour
-            if ((rows[0]["titre"] || "").trim()) {
-                titreJour = rows[0]["titre"].trim();
+            // Sous-titre optionnel dans la première ligne (colonne sous_titre)
+            if ((rows[0]["sous_titre"] || "").trim()) {
+                subtitle = rows[0]["sous_titre"].trim();
             }
 
-            // 1) Si la première ligne a des colonnes ligne1..ligne4 : ancien format
-            const hasLigneCols = ["ligne1","ligne2","ligne3","ligne4"].some(
-                k => rows[0][k] && rows[0][k].trim()
-            );
+            // Chaque ligne du fichier = une ligne de menu (max 4)
+            rows.forEach(r => {
+                const titre = (r["titre"] || r["menu"] || "").trim();
+                const prix  = (r["prix"] || "").trim();
+                const items = (r["items"] || r["ligne"] || r["item"] || "").trim();
 
-            if (hasLigneCols) {
-                for (let i = 1; i <= 4; i++) {
-                    const key = "ligne" + i;
-                    if (rows[0][key] && rows[0][key].trim()) {
-                        lines.push(rows[0][key].trim());
-                    }
+                let txt = "";
+
+                if (titre && prix) {
+                    txt = `${titre} — ${prix}`;
+                } else if (titre && items) {
+                    txt = `${titre} — ${items}`;
+                } else if (titre) {
+                    txt = titre;
+                } else if (items) {
+                    txt = items;
                 }
-            } else {
-                // 2) Nouveau format : chaque ligne du fichier = un item de menu
-                rows.forEach(r => {
-                    let line = "";
-                    const candidates = ["ligne", "item", "texte", "items"];
-                    for (const col of candidates) {
-                        if (r[col] && r[col].trim()) {
-                            line = r[col].trim();
-                            break;
-                        }
-                    }
-                    if (!line) return;
-                    lines.push(line);
-                });
 
-                // Si vraiment rien trouvé, fallback sur "items" de la première ligne découpé en \n
-                if (!lines.length && rows[0]["items"]) {
-                    rows[0]["items"]
-                        .split(/\r?\n/)
-                        .map(l => l.trim())
-                        .filter(Boolean)
-                        .forEach(l => lines.push(l));
+                if (txt) {
+                    lines.push(txt);
                 }
-            }
+            });
 
-            // Max 4 lignes à l'écran
-            lines.splice(4);
+            lines.splice(4); // max 4 lignes
 
-            if (!titreJour && !lines.length) {
+            if (!subtitle && !lines.length) {
                 widgetMenu.style.display = "none";
                 return;
             }
 
             widgetMenu.style.display = "";
-            document.getElementById("menu-title").textContent =
-                titreJour || SETTINGS.menuWidgetTitle;
+
+            document.getElementById("menu-title").textContent = subtitle || "";
 
             const html = lines
                 .map(l => "• " + escapeHtml(l))
@@ -942,4 +935,3 @@
 </script>
 </body>
 </html>
-
