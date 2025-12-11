@@ -185,56 +185,58 @@
             opacity: 0.7;
         }
 
-        /* Météo : utiliser toute la largeur */
+        /* Météo compacte : hauteur réduite */
         .weather-main {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            gap: 6px;
+            gap: 4px;          /* moins d'espace */
             text-align: center;
+            padding: 4px 0;    /* réduit la hauteur */
         }
+        
         .weather-top {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
+        
         .weather-temp {
-            font-size: 32px;
+            font-size: 26px;   /* réduit */
             font-weight: 700;
         }
+        
         .weather-desc {
-            font-size: 13px;
+            font-size: 12px;
             opacity: 0.9;
         }
+        
         .weather-extra {
             display: flex;
-            justify-content: space-around;
-            gap: 12px;
-            font-size: 11px;
+            justify-content: space-between;
+            padding: 0 4px;
+            gap: 8px;
+            font-size: 10px;
             opacity: 0.8;
             flex-wrap: wrap;
         }
+        
         .weather-2days {
             display: flex;
-            justify-content: space-around;
-            gap: 8px;
-            font-size: 11px;
+            justify-content: space-between;
+            padding: 0 4px;
+            gap: 6px;
+            font-size: 10px;
             opacity: 0.9;
-            flex-wrap: wrap;
         }
+        
         .weather-2days-item {
             background: rgba(255,255,255,0.08);
-            border-radius: 8px;
-            padding: 4px 8px;
-            min-width: 120px;
+            border-radius: 6px;
+            padding: 3px 6px;    /* plus compact */
+            min-width: 100px;    /* moins large */
         }
-        .weather-2days-label {
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        .weather-2days-icon {
-            margin-right: 4px;
-        }
+
 
         /* Menu du jour */
         .menu-title {
@@ -941,3 +943,4 @@
 </script>
 </body>
 </html>
+
