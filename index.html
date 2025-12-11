@@ -44,13 +44,13 @@
             padding: 16px;
             width: 100vw;
             height: 100vh;
-            transform-origin: top left; /* pour le zoom dynamique */
+            transform-origin: top left;
         }
 
         .panel {
             background: #111;
             border-radius: 16px;
-            padding: 16px 20px;
+            padding: 14px 18px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
@@ -58,34 +58,30 @@
             min-height: 0;
         }
 
+        /* Colonne droite : pas de scroll interne */
         .panel-widgets {
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        .panel-widgets::-webkit-scrollbar {
-            width: 0;
-            height: 0;
+            overflow: hidden;
         }
 
         .panel-title {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .panel-subtitle {
-            font-size: 14px;
+            font-size: 13px;
             text-align: center;
             opacity: 0.8;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .rate-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
             opacity: 0.9;
         }
         .rate-date { font-weight: 600; }
@@ -93,50 +89,50 @@
         .rates-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
-            font-size: 18px;
+            margin-top: 6px;
+            font-size: 17px;
         }
         .rates-table thead tr { background: #CC0033; }
         .rates-table thead th {
-            padding: 10px 12px;
+            padding: 8px 10px;
             text-align: left;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: .05em;
         }
         .rates-table tbody tr:nth-child(odd) { background: #E5093B; }
         .rates-table tbody tr:nth-child(even){ background: #F2405F; }
         .rates-table td {
-            padding: 12px;
+            padding: 10px;
             vertical-align: middle;
         }
         .rates-label { font-weight: 600; }
-        .rates-sub   { font-size: 12px; opacity: 0.9; }
+        .rates-sub   { font-size: 11px; opacity: 0.9; }
         .rates-price { text-align: right; font-weight: 700; }
 
         .details-grid {
             display: grid;
             grid-template-columns: 1fr auto;
-            column-gap: 24px;
-            row-gap: 4px;
-            font-size: 14px;
-            margin-top: 24px;
-            padding-top: 10px;
+            column-gap: 20px;
+            row-gap: 3px;
+            font-size: 13px;
+            margin-top: 18px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255,255,255,0.15);
         }
         .detail-item-title { font-weight: 600; text-align: left; }
         .detail-price      { text-align: right; font-weight: 600; }
 
         .hotel-name {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             text-align: center;
-            margin-top: 16px;
+            margin-top: 14px;
         }
 
         .footer-text {
-            font-size: 11px;
-            margin-top: 6px;
+            font-size: 10px;
+            margin-top: 4px;
             line-height: 1.3;
             opacity: 0.85;
         }
@@ -147,14 +143,14 @@
         .widgets {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             flex: 1;
             min-height: 0;
         }
         .widget {
             background: #151515;
             border-radius: 14px;
-            padding: 12px 14px;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -171,91 +167,81 @@
             align-items: center;
         }
         .widget-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
         }
         .widget-sub {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.7;
         }
 
-        /* Météo */
+        /* Météo (format compact comme avant) */
         .weather-main {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
         }
-        .weather-left {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
         .weather-temp {
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 700;
         }
         .weather-desc {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
-        }
-        .weather-icon {
-            font-size: 40px;
         }
         .weather-extra {
             display: flex;
-            gap: 16px;
-            font-size: 12px;
+            gap: 12px;
+            font-size: 11px;
             opacity: 0.8;
             margin-top: 4px;
             flex-wrap: wrap;
         }
-
-        .weather-days {
+        .weather-2days {
             display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 8px;
-            font-size: 13px;
+            gap: 10px;
+            margin-top: 6px;
+            font-size: 11px;
+            opacity: 0.85;
+            flex-wrap: wrap;
         }
-        .weather-day {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .weather-2days-item {
             background: rgba(255,255,255,0.05);
             border-radius: 8px;
-            padding: 4px 8px;
+            padding: 4px 6px;
+            min-width: 110px;
         }
-        .weather-day-left {
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .weather-2days-label {
+            font-weight: 600;
+            margin-bottom: 2px;
         }
-        .weather-day-label { font-weight: 600; }
-        .weather-day-icon  { font-size: 18px; }
+        .weather-2days-icon {
+            margin-right: 4px;
+        }
 
         /* Menu du jour */
         .menu-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             margin-bottom: 4px;
         }
         .menu-items {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
         }
 
         /* Infos importantes */
         .info-item {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
-        /* Photos / carrousel */
+        /* Photos / carrousel – un peu plus bas pour tout faire tenir */
         .photo-wrapper {
             position: relative;
-            height: 260px;
+            height: 200px;
             border-radius: 12px;
             overflow: hidden;
             background: #000;
@@ -272,7 +258,7 @@
             right: 0;
             bottom: 0;
             padding: 6px 10px;
-            font-size: 13px;
+            font-size: 12px;
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
@@ -288,8 +274,7 @@
                 transform: none;
             }
             .panel-widgets {
-                max-height: none;
-                overflow-y: visible;
+                overflow: visible;
             }
         }
     </style>
@@ -355,35 +340,17 @@
                 </div>
 
                 <div class="weather-main">
-                    <div class="weather-left">
+                    <div>
                         <div class="weather-temp" id="weather-temp">--°C</div>
                         <div class="weather-desc" id="weather-desc">Chargement…</div>
+                    </div>
+                    <div>
                         <div class="weather-extra">
                             <div id="weather-highlow"></div>
                             <div id="weather-humidity"></div>
                             <div id="weather-wind"></div>
                         </div>
-                    </div>
-                    <div class="weather-icon" id="weather-icon">☀️</div>
-                </div>
-
-                <!-- Deux sections : Aujourd'hui + Demain -->
-                <div class="weather-days">
-                    <div class="weather-day" id="weather-today">
-                        <div class="weather-day-left">
-                            <span class="weather-day-icon" id="weather-today-icon">☀️</span>
-                            <span class="weather-day-label">Aujourd'hui</span>
-                        </div>
-                        <div id="weather-today-desc"></div>
-                        <div id="weather-today-temp"></div>
-                    </div>
-                    <div class="weather-day" id="weather-tomorrow">
-                        <div class="weather-day-left">
-                            <span class="weather-day-icon" id="weather-tomorrow-icon">☁️</span>
-                            <span class="weather-day-label">Demain</span>
-                        </div>
-                        <div id="weather-tomorrow-desc"></div>
-                        <div id="weather-tomorrow-temp"></div>
+                        <div class="weather-2days" id="weather-2days"></div>
                     </div>
                 </div>
             </section>
@@ -391,9 +358,11 @@
             <!-- MENU DU JOUR -->
             <section class="widget" id="widget-menu">
                 <div class="widget-header">
-                    <div class="widget-title">Menu du jour</div>
+                    <!-- Titre du widget paramétrable via parametres.menu_widget_title -->
+                    <div class="widget-title" id="menu-widget-title">Menu du jour</div>
                     <div class="widget-sub" id="menu-date"></div>
                 </div>
+                <!-- Sous-titre spécifique du jour (ex : "Formule 2 plats 19,90€") -->
                 <div class="menu-title" id="menu-title">Chargement…</div>
                 <div class="menu-items" id="menu-items"></div>
             </section>
@@ -424,19 +393,20 @@
     const GID_INFOS      = "1342307900";
     const GID_PHOTOS     = "407579197";
     const GID_MENTIONS   = "1712757088";
-    const GID_PARAMETRES = "1182660406"; // onglet "parametres" à créer
+    const GID_PARAMETRES = "1182660406"; // onglet "parametres"
 
     const LAT = 48.123;
     const LON = -1.208;
 
     const DEFAULT_SETTINGS = {
-        refreshMainMinutes: 10,     // temps de rafraîchissement des données (tarifs, menu, etc.)
-        refreshWeatherMinutes: 20,  // temps de rafraîchissement météo
-        photoIntervalSeconds: 8,    // temps entre deux photos du carrousel
+        refreshMainMinutes: 10,
+        refreshWeatherMinutes: 20,
+        photoIntervalSeconds: 8,
         weatherLocationLabel: "Vitré",
-        screenWidthPx: null,        // largeur cible de la maquette (ex: 1920)
-        screenHeightPx: null,       // hauteur cible (ex: 1080)
-        uiScale: 1                  // facteur de zoom global
+        screenWidthPx: null,
+        screenHeightPx: null,
+        uiScale: 1,
+        menuWidgetTitle: "Menu du jour"
     };
     let SETTINGS = { ...DEFAULT_SETTINGS };
 
@@ -513,6 +483,30 @@
             .replace(/>/g, "&gt;");
     }
 
+    function normalizeImageUrl(u) {
+        if (!u) return "";
+        u = u.trim();
+
+        // Déjà au bon format
+        if (u.includes("uc?export=view")) {
+            return u;
+        }
+
+        // /file/d/ID/...
+        let m = u.match(/\/file\/d\/([^/]+)/);
+        // ?id=ID
+        if (!m) {
+            m = u.match(/[?&]id=([^&]+)/);
+        }
+
+        if (m && m[1]) {
+            const id = m[1];
+            return "https://drive.google.com/uc?export=view&id=" + id;
+        }
+
+        return u;
+    }
+
     /********* 2. PARAMÈTRES (onglet parametres) *********/
 
     async function loadSettings() {
@@ -557,6 +551,9 @@
                         if (!isNaN(s) && s > 0) SETTINGS.uiScale = s;
                         break;
                     }
+                    case "menu_widget_title":
+                        if (value) SETTINGS.menuWidgetTitle = value;
+                        break;
                 }
             });
         } catch (e) {
@@ -564,6 +561,7 @@
         }
 
         document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+        document.getElementById("menu-widget-title").textContent = SETTINGS.menuWidgetTitle;
         applyScaling();
     }
 
@@ -654,7 +652,7 @@
         dateEl.textContent = formatter.format(now);
     }
 
-    /********* 4. MÉTÉO (2 sections + icônes) *********/
+    /********* 4. MÉTÉO (compact + icônes) *********/
 
     function mapWeatherCodeLabel(code) {
         if (code === 0) return "Ciel dégagé";
@@ -688,13 +686,10 @@
                 const current = data.current;
                 const daily = data.daily;
 
-                // Bloc principal
                 document.getElementById("weather-temp").textContent =
                     Math.round(current.temperature_2m) + "°C";
-                document.getElementById("weather-desc").textContent =
-                    mapWeatherCodeLabel(current.weather_code);
-                document.getElementById("weather-icon").textContent =
-                    mapWeatherCodeIcon(current.weather_code);
+                document.getElementById("weather-desc").innerHTML =
+                    mapWeatherCodeIcon(current.weather_code) + " " + mapWeatherCodeLabel(current.weather_code);
 
                 document.getElementById("weather-highlow").textContent =
                     "Max " + Math.round(daily.temperature_2m_max[0]) +
@@ -708,28 +703,23 @@
                 document.getElementById("weather-updated").textContent =
                     "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
 
-                // Aujourd'hui
-                const todayCode = daily.weather_code[0];
-                const todayMax  = Math.round(daily.temperature_2m_max[0]);
-                const todayMin  = Math.round(daily.temperature_2m_min[0]);
-                document.getElementById("weather-today-icon").textContent =
-                    mapWeatherCodeIcon(todayCode);
-                document.getElementById("weather-today-desc").textContent =
-                    mapWeatherCodeLabel(todayCode);
-                document.getElementById("weather-today-temp").textContent =
-                    todayMax + "° / " + todayMin + "°";
+                const twoDays = document.getElementById("weather-2days");
+                twoDays.innerHTML = "";
 
-                // Demain (si dispo)
-                if (daily.time.length > 1) {
-                    const tomorrowCode = daily.weather_code[1];
-                    const tomorrowMax  = Math.round(daily.temperature_2m_max[1]);
-                    const tomorrowMin  = Math.round(daily.temperature_2m_min[1]);
-                    document.getElementById("weather-tomorrow-icon").textContent =
-                        mapWeatherCodeIcon(tomorrowCode);
-                    document.getElementById("weather-tomorrow-desc").textContent =
-                        mapWeatherCodeLabel(tomorrowCode);
-                    document.getElementById("weather-tomorrow-temp").textContent =
-                        tomorrowMax + "° / " + tomorrowMin + "°";
+                const labels = ["Aujourd'hui", "Demain"];
+                for (let i = 0; i < 2 && i < daily.time.length; i++) {
+                    const code = daily.weather_code[i];
+                    const max = Math.round(daily.temperature_2m_max[i]);
+                    const min = Math.round(daily.temperature_2m_min[i]);
+
+                    const item = document.createElement("div");
+                    item.className = "weather-2days-item";
+                    item.innerHTML = `
+                        <div class="weather-2days-label">${labels[i]}</div>
+                        <div><span class="weather-2days-icon">${mapWeatherCodeIcon(code)}</span>${mapWeatherCodeLabel(code)}</div>
+                        <div>${max}° / ${min}°</div>
+                    `;
+                    twoDays.appendChild(item);
                 }
             })
             .catch(err => {
@@ -738,7 +728,7 @@
             });
     }
 
-    /********* 5. MENU DU JOUR (max 4 lignes) *********/
+    /********* 5. MENU DU JOUR (titre modifiable + plusieurs lignes) *********/
 
     function loadMenu() {
         const widgetMenu = document.getElementById("widget-menu");
@@ -749,34 +739,62 @@
                 return;
             }
 
-            const menu = rows[0];
-            const titre = (menu["titre"] || "").trim();
-            const items = (menu["items"] || "").trim();
-
-            // On collecte max 4 lignes depuis l’onglet "menu"
-            // 1) si colonnes ligne1..ligne4 existent
+            let titreJour = "";
             const lines = [];
-            for (let i = 1; i <= 4; i++) {
-                const key = "ligne" + i;
-                if (menu[key] && menu[key].trim()) {
-                    lines.push(menu[key].trim());
+
+            // Si la première ligne a une colonne "titre", on la prend comme sous-titre du jour
+            if ((rows[0]["titre"] || "").trim()) {
+                titreJour = rows[0]["titre"].trim();
+            }
+
+            // 1) Si la première ligne a des colonnes ligne1..ligne4 : ancien format
+            const hasLigneCols = ["ligne1","ligne2","ligne3","ligne4"].some(
+                k => rows[0][k] && rows[0][k].trim()
+            );
+
+            if (hasLigneCols) {
+                for (let i = 1; i <= 4; i++) {
+                    const key = "ligne" + i;
+                    if (rows[0][key] && rows[0][key].trim()) {
+                        lines.push(rows[0][key].trim());
+                    }
+                }
+            } else {
+                // 2) Nouveau format : chaque ligne du fichier = un item de menu
+                rows.forEach(r => {
+                    let line = "";
+                    const candidates = ["ligne", "item", "texte", "items"];
+                    for (const col of candidates) {
+                        if (r[col] && r[col].trim()) {
+                            line = r[col].trim();
+                            break;
+                        }
+                    }
+                    if (!line) return;
+                    lines.push(line);
+                });
+
+                // Si vraiment rien trouvé, fallback sur "items" de la première ligne découpé en \n
+                if (!lines.length && rows[0]["items"]) {
+                    rows[0]["items"]
+                        .split(/\r?\n/)
+                        .map(l => l.trim())
+                        .filter(Boolean)
+                        .forEach(l => lines.push(l));
                 }
             }
 
-            // 2) sinon, fallback : on découpe "items" sur les retours à la ligne et on garde 4 lignes max
-            if (!lines.length && items) {
-                items.split(/\r?\n/).map(l => l.trim()).filter(Boolean).slice(0, 4).forEach(l => {
-                    lines.push(l);
-                });
-            }
+            // Max 4 lignes à l'écran
+            lines.splice(4);
 
-            if (!titre && !lines.length) {
+            if (!titreJour && !lines.length) {
                 widgetMenu.style.display = "none";
                 return;
             }
 
             widgetMenu.style.display = "";
-            document.getElementById("menu-title").textContent = titre || "Menu du jour";
+            document.getElementById("menu-title").textContent =
+                titreJour || SETTINGS.menuWidgetTitle;
 
             const html = lines
                 .map(l => "• " + escapeHtml(l))
@@ -858,7 +876,7 @@
             logoPhoto = candidateLogo;
 
             const logoImg = document.getElementById("logo-img");
-            logoImg.src = (logoPhoto["url"] || "").trim();
+            logoImg.src = normalizeImageUrl(logoPhoto["url"] || "");
             logoImg.alt = logoPhoto["legende"] || "Logo hôtel";
             logoImg.style.display = "block";
 
@@ -889,12 +907,17 @@
 
     function showPhoto() {
         if (!photos.length) return;
+
         const p = photos[currentPhoto];
-        const url = (p["url"] || "").trim();
+        const url = normalizeImageUrl(p["url"] || "");
 
         const img = document.getElementById("photo-img");
         img.src = url;
         img.alt = p["legende"] || "";
+        img.onerror = function() {
+            console.error("Erreur de chargement image :", url);
+        };
+
         document.getElementById("photo-caption").textContent = p["legende"] || "";
     }
 
