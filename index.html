@@ -18,7 +18,7 @@
         body {
             width: 100vw;
             height: 100vh;
-            overflow: hidden; /* pas de scroll global */
+            overflow: hidden;
         }
 
         /* Logo en haut à droite */
@@ -32,10 +32,11 @@
             max-height: 70px;
             width: auto;
             object-fit: contain;
+            display: block;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6));
         }
 
-        /* Grille principale en 2 colonnes qui remplit tout l'écran */
+        /* Grille principale */
         .layout {
             display: grid;
             grid-template-columns: 1.25fr 1fr;
@@ -43,6 +44,7 @@
             padding: 16px;
             width: 100vw;
             height: 100vh;
+            transform-origin: top left; /* pour le zoom dynamique */
         }
 
         .panel {
@@ -56,13 +58,10 @@
             min-height: 0;
         }
 
-        /* Colonne widgets : scroll interne si nécessaire */
         .panel-widgets {
             overflow-y: auto;
             overflow-x: hidden;
         }
-
-        /* Optionnel : cacher visuellement la scrollbar (si supporté) */
         .panel-widgets::-webkit-scrollbar {
             width: 0;
             height: 0;
@@ -81,7 +80,6 @@
             margin-bottom: 12px;
         }
 
-        /* Colonne gauche : tarifs */
         .rate-header {
             display: flex;
             justify-content: space-between;
@@ -90,18 +88,15 @@
             font-size: 14px;
             opacity: 0.9;
         }
-        .rate-date {
-            font-weight: 600;
-        }
+        .rate-date { font-weight: 600; }
+
         .rates-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 8px;
             font-size: 18px;
         }
-        .rates-table thead tr {
-            background: #CC0033;
-        }
+        .rates-table thead tr { background: #CC0033; }
         .rates-table thead th {
             padding: 10px 12px;
             text-align: left;
@@ -109,27 +104,15 @@
             text-transform: uppercase;
             letter-spacing: .05em;
         }
-        .rates-table tbody tr:nth-child(odd) {
-            background: #E5093B;
-        }
-        .rates-table tbody tr:nth-child(even) {
-            background: #F2405F;
-        }
+        .rates-table tbody tr:nth-child(odd) { background: #E5093B; }
+        .rates-table tbody tr:nth-child(even){ background: #F2405F; }
         .rates-table td {
             padding: 12px;
             vertical-align: middle;
         }
-        .rates-label {
-            font-weight: 600;
-        }
-        .rates-sub {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-        .rates-price {
-            text-align: right;
-            font-weight: 700;
-        }
+        .rates-label { font-weight: 600; }
+        .rates-sub   { font-size: 12px; opacity: 0.9; }
+        .rates-price { text-align: right; font-weight: 700; }
 
         .details-grid {
             display: grid;
@@ -141,14 +124,8 @@
             padding-top: 10px;
             border-top: 1px solid rgba(255,255,255,0.15);
         }
-        .detail-item-title {
-            font-weight: 600;
-            text-align: left;
-        }
-        .detail-price {
-            text-align: right;
-            font-weight: 600;
-        }
+        .detail-item-title { font-weight: 600; text-align: left; }
+        .detail-price      { text-align: right; font-weight: 600; }
 
         .hotel-name {
             font-size: 16px;
@@ -164,12 +141,9 @@
             opacity: 0.85;
         }
 
-        /* Zone bas de panel gauche (Bienvenue + mentions) collée au bas */
-        .panel-bottom {
-            margin-top: auto;
-        }
+        .panel-bottom { margin-top: auto; }
 
-        /* Colonne droite : widgets */
+        /* Widgets colonne droite */
         .widgets {
             display: flex;
             flex-direction: column;
@@ -185,7 +159,6 @@
             flex-direction: column;
             gap: 6px;
         }
-        /* Infos importantes reste en haut si présent */
         .widget-sticky {
             position: sticky;
             top: 0;
@@ -213,6 +186,11 @@
             justify-content: space-between;
             gap: 10px;
         }
+        .weather-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
         .weather-temp {
             font-size: 40px;
             font-weight: 700;
@@ -220,6 +198,9 @@
         .weather-desc {
             font-size: 14px;
             opacity: 0.9;
+        }
+        .weather-icon {
+            font-size: 40px;
         }
         .weather-extra {
             display: flex;
@@ -229,28 +210,35 @@
             margin-top: 4px;
             flex-wrap: wrap;
         }
-        .weather-2days {
+
+        .weather-days {
             display: flex;
-            gap: 12px;
-            margin-top: 6px;
-            font-size: 12px;
-            opacity: 0.85;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 8px;
+            font-size: 13px;
         }
-        .weather-2days-item {
+        .weather-day {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             background: rgba(255,255,255,0.05);
             border-radius: 8px;
-            padding: 4px 6px;
-            min-width: 90px;
+            padding: 4px 8px;
         }
-        .weather-2days-label {
-            font-weight: 600;
-            margin-bottom: 2px;
+        .weather-day-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+        .weather-day-label { font-weight: 600; }
+        .weather-day-icon  { font-size: 18px; }
 
         /* Menu du jour */
         .menu-title {
             font-size: 18px;
             font-weight: 600;
+            margin-bottom: 4px;
         }
         .menu-items {
             font-size: 14px;
@@ -264,10 +252,10 @@
             margin-bottom: 4px;
         }
 
-        /* Photos / carrousel simple */
+        /* Photos / carrousel */
         .photo-wrapper {
             position: relative;
-            height: 240px; /* hauteur raisonnable pour que tout rentre mieux */
+            height: 260px;
             border-radius: 12px;
             overflow: hidden;
             background: #000;
@@ -276,6 +264,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
         .photo-caption {
             position: absolute;
@@ -287,8 +276,6 @@
             background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
         }
 
-        /* Mode mobile pur (vrai smartphone) : une seule colonne.
-           Seuil très bas (600px) pour NE PAS déclencher sur la TV. */
         @media (max-width: 600px) {
             body {
                 height: auto;
@@ -298,6 +285,7 @@
                 grid-template-columns: 1fr;
                 width: 100%;
                 height: auto;
+                transform: none;
             }
             .panel-widgets {
                 max-height: none;
@@ -308,12 +296,11 @@
 </head>
 <body>
 
-<!-- LOGO EN HAUT À DROITE -->
 <div class="logo-container">
     <img id="logo-img" src="" alt="Logo hôtel" />
 </div>
 
-<div class="layout">
+<div class="layout" id="layout-root">
 
     <!-- COLONNE GAUCHE : TARIFS -->
     <div class="panel" id="panel-tarifs">
@@ -332,38 +319,29 @@
                 <th style="text-align:right;">Prix / Rates</th>
             </tr>
             </thead>
-            <tbody id="rates-body">
-            <!-- rempli par Google Sheets -->
-            </tbody>
+            <tbody id="rates-body"></tbody>
         </table>
 
-        <div class="details-grid" id="details-grid">
-            <!-- rempli par Google Sheets -->
-        </div>
+        <div class="details-grid" id="details-grid"></div>
 
-        <!-- Bas du panneau gauche collé en bas -->
         <div class="panel-bottom">
             <div class="hotel-name" id="hotel-name">
                 Bienvenue à l'hôtel ibis Vitré Centre
             </div>
-            <div class="footer-text" id="footer-text">
-                <!-- rempli par l’onglet "mentions" -->
-            </div>
+            <div class="footer-text" id="footer-text"></div>
         </div>
     </div>
 
-    <!-- COLONNE DROITE : MÉTÉO / MENU / INFOS / PHOTOS -->
+    <!-- COLONNE DROITE : WIDGETS -->
     <div class="panel panel-widgets">
         <div class="widgets">
 
-            <!-- INFOS IMPORTANTES (STICKY EN HAUT SI TEXTE) -->
+            <!-- INFOS IMPORTANTES -->
             <section class="widget widget-sticky" id="widget-infos">
                 <div class="widget-header">
                     <div class="widget-title">Informations importantes</div>
                 </div>
-                <div id="infos-list">
-                    <!-- lignes depuis Google Sheets -->
-                </div>
+                <div id="infos-list"></div>
             </section>
 
             <!-- MÉTÉO -->
@@ -375,20 +353,37 @@
                     </div>
                     <div class="widget-sub" id="weather-updated">—</div>
                 </div>
+
                 <div class="weather-main">
-                    <div>
+                    <div class="weather-left">
                         <div class="weather-temp" id="weather-temp">--°C</div>
                         <div class="weather-desc" id="weather-desc">Chargement…</div>
-                    </div>
-                    <div>
                         <div class="weather-extra">
                             <div id="weather-highlow"></div>
                             <div id="weather-humidity"></div>
                             <div id="weather-wind"></div>
                         </div>
-                        <div class="weather-2days" id="weather-2days">
-                            <!-- Aujourd'hui + demain -->
+                    </div>
+                    <div class="weather-icon" id="weather-icon">☀️</div>
+                </div>
+
+                <!-- Deux sections : Aujourd'hui + Demain -->
+                <div class="weather-days">
+                    <div class="weather-day" id="weather-today">
+                        <div class="weather-day-left">
+                            <span class="weather-day-icon" id="weather-today-icon">☀️</span>
+                            <span class="weather-day-label">Aujourd'hui</span>
                         </div>
+                        <div id="weather-today-desc"></div>
+                        <div id="weather-today-temp"></div>
+                    </div>
+                    <div class="weather-day" id="weather-tomorrow">
+                        <div class="weather-day-left">
+                            <span class="weather-day-icon" id="weather-tomorrow-icon">☁️</span>
+                            <span class="weather-day-label">Demain</span>
+                        </div>
+                        <div id="weather-tomorrow-desc"></div>
+                        <div id="weather-tomorrow-temp"></div>
                     </div>
                 </div>
             </section>
@@ -416,11 +411,10 @@
 
         </div>
     </div>
-
 </div>
 
 <script>
-    /********* 1. CONFIG *******/
+    /********* 1. CONFIG GÉNÉRALE *********/
 
     const SHEET_PUB_ID = "2PACX-1vThauH2vp6V4TkYj6VbVV6BT3fz_ggJIlgVHOzo6EGXg3fJtoaGxdLjUW8_1cIcpw";
 
@@ -430,16 +424,19 @@
     const GID_INFOS      = "1342307900";
     const GID_PHOTOS     = "407579197";
     const GID_MENTIONS   = "1712757088";
-    const GID_PARAMETRES = "000000000"; // à remplacer si tu crées l’onglet
+    const GID_PARAMETRES = "1182660406"; // onglet "parametres" à créer
 
     const LAT = 48.123;
     const LON = -1.208;
 
     const DEFAULT_SETTINGS = {
-        refreshMainMinutes: 10,
-        refreshWeatherMinutes: 20,
-        photoIntervalSeconds: 8,
-        weatherLocationLabel: "Vitré"
+        refreshMainMinutes: 10,     // temps de rafraîchissement des données (tarifs, menu, etc.)
+        refreshWeatherMinutes: 20,  // temps de rafraîchissement météo
+        photoIntervalSeconds: 8,    // temps entre deux photos du carrousel
+        weatherLocationLabel: "Vitré",
+        screenWidthPx: null,        // largeur cible de la maquette (ex: 1920)
+        screenHeightPx: null,       // hauteur cible (ex: 1080)
+        uiScale: 1                  // facteur de zoom global
     };
     let SETTINGS = { ...DEFAULT_SETTINGS };
 
@@ -447,7 +444,7 @@
     let weatherIntervalId = null;
     let photoRotationId = null;
 
-    /********* 2. FETCH & PARSE CSV *******/
+    /********* UTILS *********/
 
     function fetchCsv(gid) {
         const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_PUB_ID}/pub?gid=${gid}&single=true&output=csv`;
@@ -509,43 +506,84 @@
         return rows;
     }
 
-    /********* 3. PARAMETRES *******/
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    /********* 2. PARAMÈTRES (onglet parametres) *********/
 
     async function loadSettings() {
-        if (GID_PARAMETRES === "000000000") {
-            document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
-            return;
+        try {
+            const rows = await fetchCsv(GID_PARAMETRES);
+            rows.forEach(r => {
+                const key = (r["cle"] || "").trim().toLowerCase();
+                const value = (r["valeur"] || "").trim();
+                if (!key) return;
+
+                switch (key) {
+                    case "refresh_main_minutes": {
+                        const rm = parseInt(value, 10);
+                        if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
+                        break;
+                    }
+                    case "refresh_weather_minutes": {
+                        const rw = parseInt(value, 10);
+                        if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
+                        break;
+                    }
+                    case "photo_interval_seconds": {
+                        const ps = parseInt(value, 10);
+                        if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
+                        break;
+                    }
+                    case "weather_location_label":
+                        if (value) SETTINGS.weatherLocationLabel = value;
+                        break;
+                    case "screen_width_px": {
+                        const sw = parseInt(value, 10);
+                        if (!isNaN(sw) && sw > 0) SETTINGS.screenWidthPx = sw;
+                        break;
+                    }
+                    case "screen_height_px": {
+                        const sh = parseInt(value, 10);
+                        if (!isNaN(sh) && sh > 0) SETTINGS.screenHeightPx = sh;
+                        break;
+                    }
+                    case "ui_scale": {
+                        const s = parseFloat(value.replace(",", "."));
+                        if (!isNaN(s) && s > 0) SETTINGS.uiScale = s;
+                        break;
+                    }
+                }
+            });
+        } catch (e) {
+            console.error("Erreur loadSettings", e);
         }
 
-        const rows = await fetchCsv(GID_PARAMETRES);
-        rows.forEach(r => {
-            const key = (r["cle"] || "").trim().toLowerCase();
-            const value = (r["valeur"] || "").trim();
-            if (!key) return;
-
-            switch (key) {
-                case "refresh_main_minutes": {
-                    const rm = parseInt(value, 10);
-                    if (!isNaN(rm) && rm > 0) SETTINGS.refreshMainMinutes = rm;
-                    break;
-                }
-                case "refresh_weather_minutes": {
-                    const rw = parseInt(value, 10);
-                    if (!isNaN(rw) && rw > 0) SETTINGS.refreshWeatherMinutes = rw;
-                    break;
-                }
-                case "photo_interval_seconds": {
-                    const ps = parseInt(value, 10);
-                    if (!isNaN(ps) && ps > 0) SETTINGS.photoIntervalSeconds = ps;
-                    break;
-                }
-                case "weather_location_label":
-                    if (value) SETTINGS.weatherLocationLabel = value;
-                    break;
-            }
-        });
-
         document.getElementById("weather-location").textContent = SETTINGS.weatherLocationLabel;
+        applyScaling();
+    }
+
+    function applyScaling() {
+        const root = document.getElementById("layout-root");
+        if (!root) return;
+
+        let scale = 1;
+
+        if (SETTINGS.screenWidthPx && SETTINGS.screenHeightPx) {
+            const sx = window.innerWidth / SETTINGS.screenWidthPx;
+            const sy = window.innerHeight / SETTINGS.screenHeightPx;
+            scale = Math.min(sx, sy);
+        }
+
+        if (SETTINGS.uiScale && SETTINGS.uiScale > 0) {
+            scale *= SETTINGS.uiScale;
+        }
+
+        root.style.transform = `scale(${scale})`;
     }
 
     function setupIntervals() {
@@ -566,7 +604,9 @@
         weatherIntervalId = setInterval(loadWeather, weatherMs);
     }
 
-    /********* 4. TARIFS & DÉTAILS *******/
+    window.addEventListener("resize", applyScaling);
+
+    /********* 3. TARIFS & DÉTAILS *********/
 
     function loadTarifs() {
         fetchCsv(GID_TARIFS).then(rows => {
@@ -576,10 +616,10 @@
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                     <td>
-                        <div class="rates-label">${r["type"] || ""}</div>
-                        <div class="rates-sub">${r["sous_titre"] || ""}</div>
+                        <div class="rates-label">${escapeHtml(r["type"] || "")}</div>
+                        <div class="rates-sub">${escapeHtml(r["sous_titre"] || "")}</div>
                     </td>
-                    <td class="rates-price">${r["prix"] || ""}</td>
+                    <td class="rates-price">${escapeHtml(r["prix"] || "")}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -609,70 +649,14 @@
         const dateEl = document.getElementById("rate-date");
         const now = new Date();
         const formatter = new Intl.DateTimeFormat("fr-FR", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
+            weekday: "long", day: "numeric", month: "long", year: "numeric"
         });
         dateEl.textContent = formatter.format(now);
     }
 
-    /********* 5. MÉTÉO *******/
+    /********* 4. MÉTÉO (2 sections + icônes) *********/
 
-    function loadWeather() {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
-        fetch(url)
-            .then(r => r.json())
-            .then(data => {
-                const current = data.current;
-                const daily = data.daily;
-
-                document.getElementById("weather-temp").textContent =
-                    Math.round(current.temperature_2m) + "°C";
-
-                document.getElementById("weather-highlow").textContent =
-                    "Max " + Math.round(daily.temperature_2m_max[0]) +
-                    "° / Min " + Math.round(daily.temperature_2m_min[0]) + "°";
-
-                document.getElementById("weather-desc").textContent =
-                    mapWeatherCode(current.weather_code);
-
-                document.getElementById("weather-humidity").textContent =
-                    "Humidité " + Math.round(current.relative_humidity_2m) + "%";
-
-                document.getElementById("weather-wind").textContent =
-                    "Vent " + Math.round(current.wind_speed_10m) + " km/h";
-
-                const updated = new Date(current.time);
-                document.getElementById("weather-updated").textContent =
-                    "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
-
-                const twoDays = document.getElementById("weather-2days");
-                twoDays.innerHTML = "";
-
-                const labels = ["Aujourd'hui", "Demain"];
-                for (let i = 0; i < 2 && i < daily.time.length; i++) {
-                    const item = document.createElement("div");
-                    item.className = "weather-2days-item";
-                    const code = daily.weather_code[i];
-                    const max = Math.round(daily.temperature_2m_max[i]);
-                    const min = Math.round(daily.temperature_2m_min[i]);
-
-                    item.innerHTML = `
-                        <div class="weather-2days-label">${labels[i]}</div>
-                        <div>${mapWeatherCode(code)}</div>
-                        <div>${max}° / ${min}°</div>
-                    `;
-                    twoDays.appendChild(item);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                document.getElementById("weather-desc").textContent = "Météo indisponible";
-            });
-    }
-
-    function mapWeatherCode(code) {
+    function mapWeatherCodeLabel(code) {
         if (code === 0) return "Ciel dégagé";
         if ([1,2,3].includes(code)) return "Partiellement nuageux";
         if ([45,48].includes(code)) return "Brouillard";
@@ -684,7 +668,77 @@
         return "Conditions variables";
     }
 
-    /********* 6. MENU DU JOUR *******/
+    function mapWeatherCodeIcon(code) {
+        if (code === 0) return "☀️";
+        if ([1,2,3].includes(code)) return "🌤️";
+        if ([45,48].includes(code)) return "🌫️";
+        if ([51,53,55,56,57].includes(code)) return "🌦️";
+        if ([61,63,65].includes(code)) return "🌧️";
+        if ([71,73,75,77].includes(code)) return "❄️";
+        if ([80,81,82].includes(code)) return "🌧️";
+        if ([95,96,99].includes(code)) return "⛈️";
+        return "☁️";
+    }
+
+    function loadWeather() {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&timezone=auto`;
+        fetch(url)
+            .then(r => r.json())
+            .then(data => {
+                const current = data.current;
+                const daily = data.daily;
+
+                // Bloc principal
+                document.getElementById("weather-temp").textContent =
+                    Math.round(current.temperature_2m) + "°C";
+                document.getElementById("weather-desc").textContent =
+                    mapWeatherCodeLabel(current.weather_code);
+                document.getElementById("weather-icon").textContent =
+                    mapWeatherCodeIcon(current.weather_code);
+
+                document.getElementById("weather-highlow").textContent =
+                    "Max " + Math.round(daily.temperature_2m_max[0]) +
+                    "° / Min " + Math.round(daily.temperature_2m_min[0]) + "°";
+                document.getElementById("weather-humidity").textContent =
+                    "Humidité " + Math.round(current.relative_humidity_2m) + "%";
+                document.getElementById("weather-wind").textContent =
+                    "Vent " + Math.round(current.wind_speed_10m) + " km/h";
+
+                const updated = new Date(current.time);
+                document.getElementById("weather-updated").textContent =
+                    "Maj " + updated.toLocaleTimeString("fr-FR", {hour: "2-digit", minute: "2-digit"});
+
+                // Aujourd'hui
+                const todayCode = daily.weather_code[0];
+                const todayMax  = Math.round(daily.temperature_2m_max[0]);
+                const todayMin  = Math.round(daily.temperature_2m_min[0]);
+                document.getElementById("weather-today-icon").textContent =
+                    mapWeatherCodeIcon(todayCode);
+                document.getElementById("weather-today-desc").textContent =
+                    mapWeatherCodeLabel(todayCode);
+                document.getElementById("weather-today-temp").textContent =
+                    todayMax + "° / " + todayMin + "°";
+
+                // Demain (si dispo)
+                if (daily.time.length > 1) {
+                    const tomorrowCode = daily.weather_code[1];
+                    const tomorrowMax  = Math.round(daily.temperature_2m_max[1]);
+                    const tomorrowMin  = Math.round(daily.temperature_2m_min[1]);
+                    document.getElementById("weather-tomorrow-icon").textContent =
+                        mapWeatherCodeIcon(tomorrowCode);
+                    document.getElementById("weather-tomorrow-desc").textContent =
+                        mapWeatherCodeLabel(tomorrowCode);
+                    document.getElementById("weather-tomorrow-temp").textContent =
+                        tomorrowMax + "° / " + tomorrowMin + "°";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById("weather-desc").textContent = "Météo indisponible";
+            });
+    }
+
+    /********* 5. MENU DU JOUR (max 4 lignes) *********/
 
     function loadMenu() {
         const widgetMenu = document.getElementById("widget-menu");
@@ -699,7 +753,24 @@
             const titre = (menu["titre"] || "").trim();
             const items = (menu["items"] || "").trim();
 
-            if (!titre && !items) {
+            // On collecte max 4 lignes depuis l’onglet "menu"
+            // 1) si colonnes ligne1..ligne4 existent
+            const lines = [];
+            for (let i = 1; i <= 4; i++) {
+                const key = "ligne" + i;
+                if (menu[key] && menu[key].trim()) {
+                    lines.push(menu[key].trim());
+                }
+            }
+
+            // 2) sinon, fallback : on découpe "items" sur les retours à la ligne et on garde 4 lignes max
+            if (!lines.length && items) {
+                items.split(/\r?\n/).map(l => l.trim()).filter(Boolean).slice(0, 4).forEach(l => {
+                    lines.push(l);
+                });
+            }
+
+            if (!titre && !lines.length) {
                 widgetMenu.style.display = "none";
                 return;
             }
@@ -707,10 +778,10 @@
             widgetMenu.style.display = "";
             document.getElementById("menu-title").textContent = titre || "Menu du jour";
 
-            const itemsHtml = items
-                .replace(/\\n/g, "<br>")
-                .replace(/\n/g, "<br>");
-            document.getElementById("menu-items").innerHTML = itemsHtml;
+            const html = lines
+                .map(l => "• " + escapeHtml(l))
+                .join("<br>");
+            document.getElementById("menu-items").innerHTML = html;
         });
 
         const now = new Date();
@@ -718,7 +789,7 @@
             now.toLocaleDateString("fr-FR", {weekday: "long", day: "numeric", month: "long"});
     }
 
-    /********* 7. INFOS IMPORTANTES *******/
+    /********* 6. INFOS IMPORTANTES *********/
 
     function loadInfos() {
         const container = document.getElementById("infos-list");
@@ -742,7 +813,7 @@
         });
     }
 
-    /********* 8. MENTIONS *******/
+    /********* 7. MENTIONS *********/
 
     function loadMentions() {
         fetchCsv(GID_MENTIONS).then(rows => {
@@ -752,7 +823,7 @@
         });
     }
 
-    /********* 9. PHOTOS + LOGO *******/
+    /********* 8. PHOTOS + LOGO *********/
 
     let photos = [];
     let currentPhoto = 0;
@@ -771,6 +842,10 @@
                 const logoImg = document.getElementById("logo-img");
                 logoImg.style.display = "none";
                 widgetPhotos.style.display = "none";
+                if (photoRotationId) {
+                    clearInterval(photoRotationId);
+                    photoRotationId = null;
+                }
                 return;
             }
 
@@ -778,7 +853,6 @@
                 const legend = (r["legende"] || "").toLowerCase();
                 return legend.includes("logo");
             });
-
             if (!candidateLogo) candidateLogo = dataRows[0];
 
             logoPhoto = candidateLogo;
@@ -816,11 +890,15 @@
     function showPhoto() {
         if (!photos.length) return;
         const p = photos[currentPhoto];
-        document.getElementById("photo-img").src = (p["url"] || "").trim();
+        const url = (p["url"] || "").trim();
+
+        const img = document.getElementById("photo-img");
+        img.src = url;
+        img.alt = p["legende"] || "";
         document.getElementById("photo-caption").textContent = p["legende"] || "";
     }
 
-    /********* 10. INIT ********/
+    /********* 9. INIT *********/
 
     async function init() {
         await loadSettings();
